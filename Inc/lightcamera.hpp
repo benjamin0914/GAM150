@@ -1,0 +1,4 @@
+#ifndef LIGHTCAMERA_HPP
+#define LIGHTCAMERA_HPP
+
+#endif
