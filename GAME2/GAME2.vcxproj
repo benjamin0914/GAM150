@@ -98,8 +98,27 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\Alpha_Engine.dll" "$(OutDir)" 
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Src\Source.cpp" />
-    <ClCompile Include="..\Src\timelimit.cpp" />
+    <ClCompile Include="..\Src\Draw.cpp" />
+    <ClCompile Include="..\Src\TimeLimit.cpp" />
+    <ClCompile Include="Level1.cpp" />
+    <ClCompile Include="Level2.cpp" />
+    <ClCompile Include="Level3.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="GameStateManager.cpp" />
+    <ClCompile Include="System.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameStateList.h" />
+    <ClInclude Include="GameStateManager.h" />
+    <ClInclude Include="System.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Level3.h" />
+    <ClInclude Include="Level2.h" />
+    <ClInclude Include="Level1.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="TimeLimit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
