@@ -29,6 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	// Pointer to Mesh
 	AEGfxVertexList* pMesh = 0;
+	AEGfxVertexList* pMesh1 = 0;
 
 	// Informing the library that we're about to start adding triangles
 	AEGfxMeshStart();
@@ -49,8 +50,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
+	pMesh1 = AEGfxMeshEnd();
 
 	AEGfxTexture* pTex = AEGfxTextureLoad("Assets/Darkness.png");
+	AEGfxTexture* pTex1 = AEGfxTextureLoad("Assets/Darkness.png");
 
 	// Game Loop
 	while (gGameRunning)
@@ -82,6 +85,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		// Set the texture to pTex
 		AEGfxTextureSet(pTex, 0, 0);
+		AEGfxTextureSet(pTex1, 0, 0);
 
 		// Create a scale matrix that scales by 100 x and y
 		AEMtx33 scale = { 0 };
@@ -106,6 +110,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		// Actually drawing the mesh 
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+		AEGfxMeshDraw(pMesh1, AE_GFX_MDM_TRIANGLES);
 
 		// Informing the system about the loop's end
 		AESysFrameEnd();
@@ -116,7 +121,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	AEGfxMeshFree(pMesh); 
+	AEGfxMeshFree(pMesh1);
 	AEGfxTextureUnload(pTex);
+	AEGfxTextureUnload(pTex1);
 
 
 	// free the system
