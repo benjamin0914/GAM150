@@ -14,10 +14,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-
 	int gGameRunning = 1;
-
-	// Initialization of your own variables go here
 
 	// Using custom window procedure
 	AESysInit(hInstance, nCmdShow, 800, 600, 1, 60, true, NULL);
@@ -49,12 +46,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 1.0f,
 		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 1.0f);
 
+
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
 
-	AEGfxTexture* pTex = AEGfxTextureLoad("Assets/PlanetTexture.png");
-
-
+	AEGfxTexture* pTex = AEGfxTextureLoad("Assets/Darkness.png");
 
 	// Game Loop
 	while (gGameRunning)

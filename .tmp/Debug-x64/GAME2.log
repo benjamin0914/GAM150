@@ -1,8 +1,6 @@
-﻿  Source.cpp
-C:\Users\joeyc\OneDrive\Desktop\SIT IMGD Y1S2\WIP\Src\Source.cpp(96,31): warning C4244: 'argument': conversion from 'f64' to 'f32', possible loss of data
-  timelimit.cpp
-  Generating Code...
-  GAME2.vcxproj -> C:\Users\joeyc\OneDrive\Desktop\SIT IMGD Y1S2\WIP\bin\Debug-x64\GAME2.exe
-  3 File(s) copied
+﻿  Draw.cpp
+C:\Users\joeyc\OneDrive\Documents\GitHub\GAM150\Src\Draw.cpp(94,31): warning C4244: 'argument': conversion from 'f64' to 'f32', possible loss of data
+  GAME2.vcxproj -> C:\Users\joeyc\OneDrive\Documents\GitHub\GAM150\bin\Debug-x64\GAME2.exe
+  5 File(s) copied
   1 File(s) copied
   1 File(s) copied
