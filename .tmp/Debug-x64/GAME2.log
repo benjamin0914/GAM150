@@ -1,8 +1,6 @@
 ﻿  Main.cpp
-  pch.cpp
-  System.cpp
-  Generating Code...
-  GAME2.vcxproj -> C:\Users\Admin\source\repos\GAM150\bin\Debug-x64\GAME2.exe
+C:\Users\joeyc\OneDrive\Documents\GitHub\GAM150\GAME2\Main.cpp(567,49): warning C4244: '+=': conversion from 'f64' to 'f32', possible loss of data
+  GAME2.vcxproj -> C:\Users\joeyc\OneDrive\Documents\GitHub\GAM150\bin\Debug-x64\GAME2.exe
   5 File(s) copied
   1 File(s) copied
   1 File(s) copied

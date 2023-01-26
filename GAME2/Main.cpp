@@ -137,8 +137,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	pMesh2 = AEGfxMeshEnd();
 	AE_ASSERT_MESG(pMesh2, "Failed to create mesh 2!!");
 
-
-
 	// Informing the library that we're about to start adding vertices
 	AEGfxMeshStart();
 
@@ -176,6 +174,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	pMeshBox = AEGfxMeshEnd();
 	AE_ASSERT_MESG(pMeshBox, "Failed to create square box mesh!!");
 
+	// Pointer to Mesh
+	AEGfxVertexList* pMesh = 0;
+	//AEGfxVertexList* pMesh1 = 0;
+
+	// Informing the library that we're about to start adding triangles
+	AEGfxMeshStart();
+
+	// This shape has 2 triangles that makes up a square
+	// Color parameters represent colours as ARGB
+	// UV coordinates to read from loaded textures
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0xFFFF00FF, 0.0f, 0.0f,
+		0.5f, -0.5f, 0xFFFFFF00, 1.0f, 0.0f,
+		-0.5f, 0.5f, 0xFF00FFFF, 0.0f, 1.0f);
+
+	AEGfxTriAdd(
+		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 1.0f);
+
+
+	// Saving the mesh (list of triangles) in pMesh
+	pMesh = AEGfxMeshEnd();
+	//pMesh1 = AEGfxMeshEnd();
+
 	// Creating the objects (Shapes) end
 	////////////////////////////////////
 
@@ -192,6 +215,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// Texture 2: From file
 	pTex2 = AEGfxTextureLoad("Assets/YellowTexture.png");
 	AE_ASSERT_MESG(pTex2, "Failed to create texture2!!");
+
+	AEGfxTexture* DarknessTex = AEGfxTextureLoad("Assets/Darkness.png");
 
 
 	// Loading textures (images) end
@@ -534,6 +559,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		AEGfxSetTransform(transform.m);
 		// Drawing the mesh (list of triangles)
 		AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
+
+		AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
+		AEGfxTextureSet(DarknessTex, 0, 0);
+		static f32 elapsed = 0;
+		elapsed += AEFrameRateControllerGetFrameTime();
+		//AEMtx33 scale = { 0 };
+		AEMtx33Scale(&scale, 2750.f - 100.0f * elapsed, 1500.f - 50.0f * elapsed);
+		//AEMtx33 rotate = { 0 };
+		AEMtx33Rot(&rotate, PI);
+		//AEMtx33 translate = { 0 };
+		AEMtx33Trans(&translate, 0, 0);
+		//AEMtx33 transform = { 0 };
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
+
 
 		// Game loop draw end
 		/////////////////////
