@@ -29,7 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	// Pointer to Mesh
 	AEGfxVertexList* pMesh = 0;
-	AEGfxVertexList* pMesh1 = 0;
+	//AEGfxVertexList* pMesh1 = 0;
 
 	// Informing the library that we're about to start adding triangles
 	AEGfxMeshStart();
@@ -50,10 +50,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	// Saving the mesh (list of triangles) in pMesh
 	pMesh = AEGfxMeshEnd();
-	pMesh1 = AEGfxMeshEnd();
+	//pMesh1 = AEGfxMeshEnd();
 
 	AEGfxTexture* pTex = AEGfxTextureLoad("Assets/Darkness.png");
-	AEGfxTexture* pTex1 = AEGfxTextureLoad("Assets/Darkness.png");
+	//AEGfxTexture* pTex1 = AEGfxTextureLoad("Assets/Darkness.png");
 
 	// Game Loop
 	while (gGameRunning)
@@ -64,10 +64,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		// Handling Input
 		AEInputUpdate();
 
-		// Your own update logic goes here
-
-
-		// Your own rendering logic goes here
 		// Set the background to black.
 		AEGfxSetBackgroundColor(0.0f, 0.0f, 0.0f);
 
@@ -78,6 +74,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		// display the full range of colors (default is black).
 		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
 
+
 		// Set blend mode to AE_GFX_BM_BLEND
 		// This will allow transparency.
 		AEGfxSetBlendMode(AE_GFX_BM_BLEND);
@@ -85,20 +82,26 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		// Set the texture to pTex
 		AEGfxTextureSet(pTex, 0, 0);
-		AEGfxTextureSet(pTex1, 0, 0);
+		//AEGfxTextureSet(pTex1, 0, 0);
 
-		// Create a scale matrix that scales by 100 x and y
+		static f32 elapsed = 0;
+		elapsed += AEFrameRateControllerGetFrameTime();
 		AEMtx33 scale = { 0 };
-		AEMtx33Scale(&scale, 100.f, 100.f);
+		AEMtx33Scale(&scale, 2750.f - 100.0f * elapsed, 1500.f - 50.0f * elapsed);
+		
+		/*while (AEGetTime(NULL))
+		{
+			AEMtx33Scale(&scale, 2750.f - 100.0f * AEFrameRateControllerGetFrameRate(), 1500.f - 50.0f * AEFrameRateControllerGetFrameRate());
+		}*/
 
 		// Create a rotation matrix that rotates by 45 degrees
 		AEMtx33 rotate = { 0 };
-		AEMtx33Rot(&rotate, -PI / 4 * AEGetTime(NULL));
+		AEMtx33Rot(&rotate, PI);
 
 		// Create a translation matrix that translates by
 		// 100 in the x-axis and 100 in the y-axis
 		AEMtx33 translate = { 0 };
-		AEMtx33Trans(&translate, 100.0f, 100.0f);
+		AEMtx33Trans(&translate, 0, 0);
 
 		// Concat the matrices (TRS)
 		AEMtx33 transform = { 0 };
@@ -110,7 +113,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		// Actually drawing the mesh 
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-		AEGfxMeshDraw(pMesh1, AE_GFX_MDM_TRIANGLES);
+		//AEGfxMeshDraw(pMesh1, AE_GFX_MDM_TRIANGLES);
 
 		// Informing the system about the loop's end
 		AESysFrameEnd();
@@ -121,9 +124,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 
 	AEGfxMeshFree(pMesh); 
-	AEGfxMeshFree(pMesh1);
+	//AEGfxMeshFree(pMesh1);
 	AEGfxTextureUnload(pTex);
-	AEGfxTextureUnload(pTex1);
+	//AEGfxTextureUnload(pTex1);
 
 
 	// free the system
