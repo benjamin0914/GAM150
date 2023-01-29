@@ -1,6 +1,4 @@
 #include "pch.h"
-#include "Level2.h"
-#include "GameStateManager.h"
 
 int Level2_Lives = 0; //Initialize 'Level2_Lives'
 int Level2_Counter = 0; //Initialize 'Level2_Counter'
