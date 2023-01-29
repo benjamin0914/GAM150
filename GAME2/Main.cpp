@@ -4,6 +4,7 @@
 #include "AEEngine.h"
 #include "function.hpp"
 #include <iostream>
+#include "Enemy.h"
 
 
 
@@ -55,7 +56,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	AEVec2 pt6 = { 100.0f, -120.0f };
 	AEVec2 pt7 = { 250.0f, -120.0f };
 	AEVec2 pt8 = { 250.0f, 200.0f };
-
+	AEVec2 obj2 = { 100.0f, -135.0f };
 
 	//test
 	AEVec2 test = { 0.f, 1.f };
@@ -67,6 +68,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	int counter = 0; // Counter to swap textures
 
+	//float obj2X = 100.0f, obj2Y = -60.0f; // Position variables for box
 
 	// Variable declaration end
 	///////////////////////////
@@ -216,7 +218,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	pTex2 = AEGfxTextureLoad("Assets/YellowTexture.png");
 	AE_ASSERT_MESG(pTex2, "Failed to create texture2!!");
 
-	AEGfxTexture* DarknessTex = AEGfxTextureLoad("Assets/Darkness.png");
+	//AEGfxTexture* DarknessTex = AEGfxTextureLoad("Assets/Darkness.png");
 
 
 	// Loading textures (images) end
@@ -435,6 +437,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		else if (AEInputCheckCurr(AEVK_K))
 			objtexY -= 0.01f;
 
+		updatePos(obj2.x, obj2.y);
+
 		// Game loop update end
 		///////////////////////
 
@@ -560,6 +564,27 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		// Drawing the mesh (list of triangles)
 		AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
 
+		// Drawing object
+		AEGfxSetRenderMode(AE_GFX_RM_COLOR);
+		AEGfxSetPosition(110.0f, -150.0f); //minus 20 y-axis for every platform position
+		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
+		AEGfxTextureSet(NULL, 0, 0);
+		scale = { 0 };
+		AEMtx33Scale(&scale, 30.f, 30.f);
+		rotate = { 0 };
+		AEMtx33Rot(&rotate, PI * 2.f);
+		translate = { 0 };
+		AEMtx33Trans(&translate, obj2.x, obj2.y);
+		transform = { 0 };
+		AEMtx33Concat(&transform, &rotate, &scale);
+		AEMtx33Concat(&transform, &translate, &transform);
+		AEGfxSetTransform(transform.m);
+		// Drawing the mesh (list of triangles)
+		AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
+
+
+
+		/*
 		AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
 		AEGfxTextureSet(DarknessTex, 0, 0);
@@ -576,7 +601,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		AEMtx33Concat(&transform, &translate, &transform);
 		AEGfxSetTransform(transform.m);
 		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-
+		*/
 
 		// Game loop draw end
 		/////////////////////
