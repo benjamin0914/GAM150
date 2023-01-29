@@ -5,5 +5,13 @@
 
 #include "GameStateList.h"
 #include <iostream>
+#include "AEEngine.h"
+#include "function.hpp"
+#include "GameStateManager.h"
+#include "Level1.h"
+#include "Level2.h"
+#include "Level3.h"
+#include "System.h"
+#include "Input.h"
 
 #endif //PCH_H

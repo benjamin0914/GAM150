@@ -1,9 +1,7 @@
 #include "pch.h"
-#include "Level1.h"
-#include "GameStateManager.h"
 
-int Level1_Lives = 0;
-int Level1_Counter = 0; //Initialize 'Level1_Counter'
+AEGfxVertexList* pMesh = 0;
+AEGfxTexture* TimerTex = AEGfxTextureLoad("Timer/Darkness.png");
 
 void Level1_Load()
 {
@@ -11,29 +9,52 @@ void Level1_Load()
 
 void Level1_Initialize()
 {
+	current = GS_LEVEL1;
 }
 
 void Level1_Update()
 {
-	Level1_Counter -= 1;
+	AEGfxMeshStart();
+	AEGfxVertexList* pMesh = 0;
 
-	if (Level1_Counter == 0)
-	{
-		Level1_Lives -= 1;
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0xFFFF00FF, 0.0f, 0.0f,
+		0.5f, -0.5f, 0xFFFFFF00, 1.0f, 0.0f,
+		-0.5f, 0.5f, 0xFF00FFFF, 0.0f, 1.0f);
 
-		if (Level1_Lives == 0)
-			next = GS_LEVEL2;
-		else if (Level1_Lives > 0)
-			next = GS_RESTART;
-	}
+	AEGfxTriAdd(
+		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 1.0f);
+
+	pMesh = AEGfxMeshEnd();
+
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxTextureSet(TimerTex, 0, 0);
+	static f32 elapsed = 0;
+	elapsed += AEFrameRateControllerGetFrameTime();
+	AEMtx33 scale = { 0 };
+	AEMtx33Scale(&scale, 550.f - 50.0f * elapsed, 50.f);
+	AEMtx33 rotate = { 0 };
+	AEMtx33Rot(&rotate, PI);
+	AEMtx33 translate = { 0 };
+	AEMtx33Trans(&translate, 0, 0);
+	AEMtx33 transform = { 0 };
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
 }
 
 void Level1_Draw()
 {
+	AEGfxTexture* TimerTex = AEGfxTextureLoad("Timer/Darkness.png");
 }
 
 void Level1_Free()
 {
+	AEGfxMeshFree(pMesh);
 }
 
 void Level1_Unload()

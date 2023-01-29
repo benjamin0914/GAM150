@@ -1,4 +1,3 @@
-#include "System.h"
 #include "pch.h"
 
 void System_Initialize()

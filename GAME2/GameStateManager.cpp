@@ -1,8 +1,4 @@
 #include "pch.h"
-#include "GameStateManager.h"
-#include "Level1.h"
-#include "Level2.h"
-#include "Level3.h"
 
 int current = 0, previous = 0, next = 0;
 
