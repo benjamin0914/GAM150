@@ -5,6 +5,7 @@ AEGfxTexture* TimerTex = AEGfxTextureLoad("Timer/Darkness.png");
 
 void Level1_Load()
 {
+	AEGfxTexture* TimerTex = AEGfxTextureLoad("Timer/Darkness.png");
 }
 
 void Level1_Initialize()
@@ -38,9 +39,8 @@ void Level1_Update()
 	if ((550.f - 50.0f * elapsed) > 0) {
 		AEMtx33Scale(&scale, 550.f - 50.0f * elapsed, 50.f);
 	}
-	else { 
+	else {
 		AEMtx33Scale(&scale, 0, 0);
-		next = GS_LEVEL2;
 	}
 
 	AEMtx33 rotate = { 0 };
@@ -56,7 +56,6 @@ void Level1_Update()
 
 void Level1_Draw()
 {
-	AEGfxTexture* TimerTex = AEGfxTextureLoad("Timer/Darkness.png");
 }
 
 void Level1_Free()

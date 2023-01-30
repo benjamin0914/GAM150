@@ -174,31 +174,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	pMeshBox = AEGfxMeshEnd();
 	AE_ASSERT_MESG(pMeshBox, "Failed to create square box mesh!!");
 
-	// Pointer to Mesh
-	AEGfxVertexList* pMesh = 0;
-	//AEGfxVertexList* pMesh1 = 0;
-
-	// Informing the library that we're about to start adding triangles
-	AEGfxMeshStart();
-
-	// This shape has 2 triangles that makes up a square
-	// Color parameters represent colours as ARGB
-	// UV coordinates to read from loaded textures
-	AEGfxTriAdd(
-		-0.5f, -0.5f, 0xFFFF00FF, 0.0f, 0.0f,
-		0.5f, -0.5f, 0xFFFFFF00, 1.0f, 0.0f,
-		-0.5f, 0.5f, 0xFF00FFFF, 0.0f, 1.0f);
-
-	AEGfxTriAdd(
-		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
-		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 1.0f);
-
-
-	// Saving the mesh (list of triangles) in pMesh
-	pMesh = AEGfxMeshEnd();
-	//pMesh1 = AEGfxMeshEnd();
-
 	// Creating the objects (Shapes) end
 	////////////////////////////////////
 
@@ -231,10 +206,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	while (gGameRunning)
 	{
 		// Informing the system about the loop's start
-		AESysFrameStart();
+		System_Initialize();
 
 		// Handling Input
-		AEInputUpdate();
+		Input_Handle();
 
 		///////////////////
 		// Game loop update
@@ -578,16 +553,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		// Drawing the mesh (list of triangles)
 		AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
 
+		Level1_Load();
 		Level1_Update();
-
+		
 		// Game loop draw end
 		/////////////////////
 
 
 
 		// Informing the system about the loop's end
-		AESysFrameEnd();
-
+		System_Exit();
 
 		// check if forcing the application to quit
 		if (AEInputCheckTriggered(AEVK_ESCAPE) || 0 == AESysDoesWindowExist())
