@@ -1,9 +1,3 @@
-.tmp/Debug-x64/Enemy.obj
-.tmp/Debug-x64/function.obj
-.tmp/Debug-x64/Level1.obj
-.tmp/Debug-x64/Level2.obj
-.tmp/Debug-x64/Level3.obj
-.tmp/Debug-x64/Main.obj
-.tmp/Debug-x64/MainMenu.obj
-.tmp/Debug-x64/pch.obj
-.tmp/Debug-x64/System.obj
+.tmp/
+.vs/
+bin/
