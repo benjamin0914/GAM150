@@ -1,6 +1,5 @@
 ﻿  Level1.cpp
-C:\Users\User\Desktop\GAM150\GAME2\Level1.cpp(637,48): warning C4244: '+=': conversion from 'f64' to 'f32', possible loss of data
   GAME2.vcxproj -> C:\Users\User\Desktop\GAM150\bin\Debug-x64\GAME2.exe
-  10 File(s) copied
+  12 File(s) copied
   1 File(s) copied
   1 File(s) copied

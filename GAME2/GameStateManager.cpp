@@ -6,7 +6,7 @@
 #include "MainMenu.h"
 
 int current = 0, previous = 0, next = 0;
-
+float g_dt;
 FP fpLoad = nullptr, fpInitialize = nullptr, fpUpdate = nullptr, fpDraw = nullptr, fpFree = nullptr, fpUnload = nullptr, fpLoadMesh = nullptr;
 
 void GSM_Initialize(int startingState)

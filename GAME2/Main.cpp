@@ -34,7 +34,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	/////////////////
 	// Initialization
-
+	
 	// Using custom window procedure
 	AESysInit(hInstance, nCmdShow, 800, 600, 1, 60, true, NULL);
 
@@ -77,6 +77,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		if (current != GS_RESTART) {
 			GSM_Update();
+
 			fpLoad();
 		}
 		else {
@@ -91,6 +92,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 			// Handling Input
 			AEInputUpdate();
+			g_dt = static_cast<f32>(AEFrameRateControllerGetFrameTime()); //Getting delta time
+
+			if (g_dt >= 0.01667f) // 1 / 60fps;
+			{
+				g_dt = 0.01667f;
+			}
 			fpUpdate();
 			fpDraw();
 

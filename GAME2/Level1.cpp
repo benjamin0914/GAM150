@@ -10,6 +10,7 @@ AEGfxTexture* pTex2; // Pointer to Texture (Image)
 AEGfxTexture* pTex3;
 AEGfxTexture* pTex4;
 AEGfxTexture* pTex5;
+AEGfxTexture* pTex6;
 AEGfxTexture* slimeTexture;
 AEGfxTexture* pTimerTex;
 
@@ -210,6 +211,7 @@ void Level1_Load()
 	// Texture 1: From file
 	pTex1 = AEGfxTextureLoad("Assets/Special_Tile.png");
 	pTex4 = AEGfxTextureLoad("Assets/Hole.png");
+	pTex6 = AEGfxTextureLoad("Assets/smallerhole2.png");
 	pTex5 = AEGfxTextureLoad("Assets/player_cube.png");
 	pTex3 = AEGfxTextureLoad("Assets/placeholder.png");
 	AE_ASSERT_MESG(pTex1, "Failed to create texture1!!");
@@ -266,21 +268,11 @@ void Level1_Initialize()
 
 void Level1_Update()
 {
-	//Level1_Counter -= 1;
 
-	//if (Level1_Counter == 0)
-	//{
-	//	Level1_Lives -= 1;
-
-	//	if (Level1_Lives == 0)
-	//		next = GS_LEVEL2;
-	//	else if (Level1_Lives > 0)
-	//		next = GS_RESTART;
-	//}
 
 			///////////////////
 		// Game loop update
-
+		
 
 		// Blending mode
 	if (AEInputCheckCurr(AEVK_1))
@@ -602,10 +594,9 @@ void Level1_Draw()
 
 
 
-	// Game loop draw end
-	/////////////////////
-
 	
+	static f32 elapsed = 0;
+	elapsed += g_dt;
 	//slime draw
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	AEGfxSetPosition(slimeX, slimeY);
@@ -615,7 +606,12 @@ void Level1_Draw()
 
 
 	AEGfxSetTransparency(1.0f);
-	AEGfxTextureSet(pTex4, 0.0f, 0.0f);
+	if (elapsed < 10.0f) {
+		AEGfxTextureSet(pTex4, 0.0f, 0.0f);
+	} 
+	else {
+		AEGfxTextureSet(pTex6, 0.0f, 0.0f);
+	}
 	scale = { 0 };
 	AEMtx33Scale(&scale, 810.f, 700.f);
 	rotate = { 0 };
@@ -633,21 +629,22 @@ void Level1_Draw()
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
 	AEGfxTextureSet(pTimerTex, 0, 0);
-	static f32 elapsed = 0;
-	elapsed += AEFrameRateControllerGetFrameTime();
+
 	//AEMtx33 scale = { 0 };
-	if ((550.f - 50.0f * elapsed) > 0) {
-		AEMtx33Scale(&scale, 550.f - 50.0f * elapsed, 50.f);
+
+	if ((500.f - 50.0f *elapsed) > 0) {
+		AEMtx33Scale(&scale, 500.f - 50.0f * elapsed, 50.f);
 	}
 	else {
 		AEMtx33Scale(&scale, 0, 0);
 	}
 
-	//AEMtx33 rotate = { 0 };
+
+	
 	AEMtx33Rot(&rotate, PI);
-	//AEMtx33 translate = { 0 };
+
 	AEMtx33Trans(&translate, obj1.x, obj1.y+250);
-	//AEMtx33 transform = { 0 };
+
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
