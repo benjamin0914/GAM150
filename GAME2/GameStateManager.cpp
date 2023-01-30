@@ -18,14 +18,14 @@ void GSM_Update()
 {
 	switch (current)
 	{
-	case GS_MAINMENU:
-		fpLoad = MainMenu_Load;
-		fpInitialize = MainMenu_Init;
-		fpUpdate = MainMenu_Update;
-		fpDraw = MainMenu_Draw;
-		fpFree = MainMenu_Free;
-		fpUnload = MainMenu_Unload;
-		break;
+		case GS_MAINMENU:
+			fpLoad = MainMenu_Load;
+			fpInitialize = MainMenu_Init;
+			fpUpdate = MainMenu_Update;
+			fpDraw = MainMenu_Draw;
+			fpFree = MainMenu_Free;
+			fpUnload = MainMenu_Unload;
+			break;
 		case GS_LEVEL1:
 			fpLoad = Level1_Load;
 			fpInitialize = Level1_Initialize;

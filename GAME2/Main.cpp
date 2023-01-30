@@ -55,8 +55,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	////////////////////////////////////
 
 
-
-
 	// WHERE LOADING TEXTURES SUPPOSED TO BE
 
 	//////////////////////////////////
@@ -105,14 +103,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		previous = current;
 		current = next;
-		// check if forcing the application to quit
-		if (AEInputCheckTriggered(AEVK_ESCAPE) || 0 == AESysDoesWindowExist())
-			current = GS_QUIT;
+
 	}
 
+
+	
 	// Freeing the objects and textures
 
 
 	// free the system
 	AESysExit();
+
 }

@@ -12,6 +12,25 @@ int Level1_Counter = 0; //Initialize 'Level1_Counter'
 AEGfxTexture* pTex1; // Pointer to Texture (Image)
 AEGfxTexture* pTex2; // Pointer to Texture (Image)
 AEGfxTexture* slimeTexture;
+/*
+AEVec2 pt1;
+AEVec2 pt2;
+AEVec2 pt3;
+AEVec2 pt4;
+AEVec2 pt5;
+AEVec2 pt6;
+AEVec2 pt7;
+AEVec2 pt8;
+*/
+AEGfxVertexList* pMesh1;
+AEGfxVertexList* pMesh2; // Pointer to Mesh (Model)
+AEGfxVertexList* pMeshLine;
+AEGfxVertexList* pMeshBox;
+
+AEGfxVertexList* slime;
+float slimeX, slimeY;
+
+
 AEVec2 pt1 = { -250.0f, 200.0f };
 AEVec2 pt2 = { -250.0f, -120.0f };
 AEVec2 pt3 = { -100.0f, -120.0f };
@@ -20,32 +39,26 @@ AEVec2 pt5 = { 100.0f, -20.0f };
 AEVec2 pt6 = { 100.0f, -120.0f };
 AEVec2 pt7 = { 250.0f, -120.0f };
 AEVec2 pt8 = { 250.0f, 200.0f };
-AEGfxVertexList* pMesh1 = 0;
-AEGfxVertexList* pMesh2 = 0; // Pointer to Mesh (Model)
-AEGfxVertexList* pMeshLine;
-AEGfxVertexList* pMeshBox;
 
-AEGfxVertexList* slime = 0;
-float slimeX = 110.0f, slimeY = -130.0f;
 
 
 //float obj1X = 0.0f, obj1Y = 0.0f; // Position variables for object 1
-float objtexX = 0, objtexY = 0; // Texture variables for object 2 and 3 texture
+float objtexX, objtexY; // Texture variables for object 2 and 3 texture
 
-bool jump{ false };
-bool falling{ false };
-bool movement_left{ false };
-bool movement_right{ false };
+bool jump;
+bool falling;
+bool movement_left;
+bool movement_right;
 
 float obj1Y_min;
 float obj1Y_max;
-float jump_timer = 0.0f;
+float jump_timer;
 float const duration = 1.0f; //duration it takes to jump upwards
 
-AEVec2 obj1 = { 0.f, 0.f };
-AEVec2 plf1 = { 0.f, -80.f };
-AEVec2 plf2 = { -180.f, -180.f };
-AEVec2 plf3 = { 180.f, -180.f };
+AEVec2 obj1;
+AEVec2 plf1;
+AEVec2 plf2;
+AEVec2 plf3;
 
 
 
@@ -61,9 +74,13 @@ AEVec2 testtest2 = { 0.f, 0.f };
 int counter = 0; // Counter to swap textures
 
 
+
+
+
 void Level1_Load()
 {
-		// Informing the library that we're about to start adding triangles
+	//////////////////////////////////
+// Informing the library that we're about to start adding triangles
 	AEGfxMeshStart();
 
 	// 1 triangle at a time
@@ -157,28 +174,59 @@ void Level1_Load()
 		-20.0f, 20.0f, 0x00FFFFFF, 0.0f, 0.0f);
 
 	slime = AEGfxMeshEnd();
+	AE_ASSERT_MESG(slime, "Failed to create slime mesh");
 
 	////////////////////////////
 	// Loading textures (images)
 
 
 	// Texture 1: From file
-		pTex1 = AEGfxTextureLoad("Assets/PlanetTexture.png");
-		AE_ASSERT_MESG(pTex1, "Failed to create texture1!!");
+	pTex1 = AEGfxTextureLoad("Assets/PlanetTexture.png");
+	AE_ASSERT_MESG(pTex1, "Failed to create texture1!!");
 
-		// Texture 2: From file
-		pTex2 = AEGfxTextureLoad("Assets/YellowTexture.png");
-		AE_ASSERT_MESG(pTex2, "Failed to create texture2!!");
+	// Texture 2: From file
+	pTex2 = AEGfxTextureLoad("Assets/YellowTexture.png");
+	AE_ASSERT_MESG(pTex2, "Failed to create texture2!!");
 
-		slimeTexture = AEGfxTextureLoad("Assets/slime.png");
-		AE_ASSERT_MESG(slimeTexture, "Failed to load iamge");
+	slimeTexture = AEGfxTextureLoad("Assets/slime.png");
+	AE_ASSERT_MESG(slimeTexture, "Failed to load iamge");
 
-		// Loading textures (images) end
-		//////////////////////////////////
+	// Loading textures (images) end
+	//////////////////////////////////
+
+
 }
 
 void Level1_Initialize()
 {
+	/*
+	AEVec2Set(&pt1, -250.f, 200.0f);
+	AEVec2Set(&pt2, -250.f, 170.0f);
+	AEVec2Set(&pt3, -100.f, -120.0f);
+	AEVec2Set(&pt4, -100.f, -20.0f);
+	AEVec2Set(&pt5, 100.f, -20.0f);
+	AEVec2Set(&pt6, 100.f, -120.0f);
+	AEVec2Set(&pt7, 250.0f, -120.0f);
+	AEVec2Set(&pt8, 250.f, 200.0f);
+	*/
+
+	slimeX = 110.0f;
+	slimeY = -130.0f;
+	objtexX = 0;
+	objtexY = 0;
+
+	jump_timer = 0.0f;
+
+	obj1 = { 0.f, 0.f };
+	plf1 = { 0.f, -80.f };
+	plf2 = { -180.f, -180.f };
+	plf3 = { 180.f, -180.f };
+
+	jump = { false };
+	falling = { false };
+	movement_left = { false };
+	movement_right = { false };
+
 	AEGfxSetBackgroundColor(0.4f, 0.5f, 0.9f);
 	////////////////////////////////
 // Creating the objects (Shapes)
@@ -528,24 +576,26 @@ void Level1_Draw()
 	// Game loop draw end
 	/////////////////////
 
-
+	
 	//slime draw
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	AEGfxSetPosition(slimeX, slimeY);
 	AEGfxTextureSet(slimeTexture, 0.0f, 0.0f);
 	AEGfxMeshDraw(slime, AE_GFX_MDM_TRIANGLES);
+	
 }
 
 void Level1_Free()
 {
-	AEGfxMeshFree(pMesh1);
-	AEGfxMeshFree(pMesh2);
-	AEGfxMeshFree(pMeshLine);
-	AEGfxMeshFree(pMeshBox);
+	
 }
 
 void Level1_Unload()
 {
 	AEGfxTextureUnload(pTex1);
 	AEGfxTextureUnload(pTex2);
+	AEGfxMeshFree(pMesh1);
+	AEGfxMeshFree(pMesh2);
+	AEGfxMeshFree(pMeshLine);
+	AEGfxMeshFree(pMeshBox);
 }

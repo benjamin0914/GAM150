@@ -98,20 +98,24 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\Alpha_Engine.dll" "$(OutDir)" 
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="function.cpp" />
     <ClCompile Include="Level1.cpp" />
     <ClCompile Include="Level2.cpp" />
     <ClCompile Include="Level3.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
     <ClCompile Include="System.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="function.hpp" />
     <ClInclude Include="GameStateList.h" />
     <ClInclude Include="GameStateManager.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Level3.h" />

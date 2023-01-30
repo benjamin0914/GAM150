@@ -7,7 +7,7 @@ struct projectile {
 };
 
 void updatePos(float &x, float &y) {
-	static float xBoundary = x + 200.0f;
+	static float xBoundary = x + 150.0f;
 	static float xBegin = x;
 	static bool flag = 1;
 	if (flag == 1) {
