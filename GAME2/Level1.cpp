@@ -5,11 +5,11 @@ AEGfxTexture* TimerTex = AEGfxTextureLoad("Timer/Darkness.png");
 
 void Level1_Load()
 {
+	current = GS_LEVEL1;
 }
 
 void Level1_Initialize()
 {
-	current = GS_LEVEL1;
 }
 
 void Level1_Update()

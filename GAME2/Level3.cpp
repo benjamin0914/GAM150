@@ -5,6 +5,7 @@ int Level3_Counter = 0; //Initialize 'Level3_Counter'
 
 void Level3_Load()
 {
+	current = GS_LEVEL3;
 }
 
 void Level3_Initialize()
