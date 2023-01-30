@@ -66,7 +66,6 @@ AEVec2 plf3;
 
 
 
-
 //test
 AEVec2 test = { 0.f, 1.f };
 
@@ -103,7 +102,7 @@ void Level1_Load()
 
 	pMesh1 = AEGfxMeshEnd();
 	AE_ASSERT_MESG(pMesh1, "Failed to create mesh 1!!");
-
+	
 
 
 	// Informing the library that we're about to start adding triangles
@@ -124,7 +123,7 @@ void Level1_Load()
 
 	pMesh2 = AEGfxMeshEnd();
 	AE_ASSERT_MESG(pMesh2, "Failed to create mesh 2!!");
-
+	
 
 
 	// Informing the library that we're about to start adding vertices
@@ -477,8 +476,7 @@ void Level1_Draw()
 {
 	//////////////////
 		// Game loop draw
-
-
+	
 		// Drawing object 1
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	// Set position for object 1
@@ -649,7 +647,7 @@ void Level1_Draw()
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMeshTimer, AE_GFX_MDM_TRIANGLES);
-
+	
 }
 
 void Level1_Free()

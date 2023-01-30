@@ -41,7 +41,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	//set background color
 	AEGfxSetBackgroundColor(0.4f, 0.5f, 0.9f);
 
-
+	 Roboto = AEGfxCreateFont("Assets/Roboto-Regular.ttf", 40);
 	// Changing the window title
 	AESysSetWindowTitle("Lights Out");
 
