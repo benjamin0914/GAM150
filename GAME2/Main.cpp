@@ -582,27 +582,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		// Drawing the mesh (list of triangles)
 		AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
 
-
-
-		/*
-		AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-		AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-		AEGfxTextureSet(DarknessTex, 0, 0);
-		static f32 elapsed = 0;
-		elapsed += AEFrameRateControllerGetFrameTime();
-		//AEMtx33 scale = { 0 };
-		AEMtx33Scale(&scale, 2750.f - 100.0f * elapsed, 1500.f - 50.0f * elapsed);
-		//AEMtx33 rotate = { 0 };
-		AEMtx33Rot(&rotate, PI);
-		//AEMtx33 translate = { 0 };
-		AEMtx33Trans(&translate, 0, 0);
-		//AEMtx33 transform = { 0 };
-		AEMtx33Concat(&transform, &rotate, &scale);
-		AEMtx33Concat(&transform, &translate, &transform);
-		AEGfxSetTransform(transform.m);
-		AEGfxMeshDraw(pMesh, AE_GFX_MDM_TRIANGLES);
-		*/
-
 		// Game loop draw end
 		/////////////////////
 
