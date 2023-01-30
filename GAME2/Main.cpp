@@ -1,10 +1,8 @@
 // ---------------------------------------------------------------------------
 // includes
 
-#include "AEEngine.h"
-#include "function.hpp"
-#include <iostream>
 #include "Enemy.h"
+#include "pch.h"
 
 
 
@@ -217,8 +215,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	// Texture 2: From file
 	pTex2 = AEGfxTextureLoad("Assets/YellowTexture.png");
 	AE_ASSERT_MESG(pTex2, "Failed to create texture2!!");
-
-	//AEGfxTexture* DarknessTex = AEGfxTextureLoad("Assets/Darkness.png");
 
 
 	// Loading textures (images) end
@@ -581,6 +577,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		AEGfxSetTransform(transform.m);
 		// Drawing the mesh (list of triangles)
 		AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
+
+		Level1_Update();
 
 		// Game loop draw end
 		/////////////////////

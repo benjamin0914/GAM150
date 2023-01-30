@@ -1,4 +1,6 @@
 ﻿  Level1.cpp
 C:\Users\joeyc\OneDrive\Documents\GitHub\GAM150\GAME2\Level1.cpp(36,48): warning C4244: '+=': conversion from 'f64' to 'f32', possible loss of data
-Main.obj : error LNK2019: unresolved external symbol "void __cdecl updatePos(float &,float &)" (?updatePos@@YAXAEAM0@Z) referenced in function wWinMain
-C:\Users\joeyc\OneDrive\Documents\GitHub\GAM150\\bin\Debug-x64\GAME2.exe : fatal error LNK1120: 1 unresolved externals
+  GAME2.vcxproj -> C:\Users\joeyc\OneDrive\Documents\GitHub\GAM150\bin\Debug-x64\GAME2.exe
+  5 File(s) copied
+  1 File(s) copied
+  1 File(s) copied

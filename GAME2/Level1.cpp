@@ -5,11 +5,11 @@ AEGfxTexture* TimerTex = AEGfxTextureLoad("Timer/Darkness.png");
 
 void Level1_Load()
 {
-	current = GS_LEVEL1;
 }
 
 void Level1_Initialize()
 {
+	current = GS_LEVEL1;
 }
 
 void Level1_Update()
@@ -35,9 +35,8 @@ void Level1_Update()
 	static f32 elapsed = 0;
 	elapsed += AEFrameRateControllerGetFrameTime();
 	AEMtx33 scale = { 0 };
-	if ((550.f / 50.0f * elapsed) > 1) {
-		std::cout << 550.f / 50.0f * elapsed << std::endl;
-		AEMtx33Scale(&scale, 550.f / 50.0f * elapsed, 50.f);
+	if ((550.f - 50.0f * elapsed) > 0) {
+		AEMtx33Scale(&scale, 550.f - 50.0f * elapsed, 50.f);
 	}
 	else { AEMtx33Scale(&scale, 0, 0); }
 	AEMtx33 rotate = { 0 };

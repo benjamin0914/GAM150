@@ -7,11 +7,11 @@ AEGfxVertexList* pMeshdarkness = 0;
 
 void Level2_Load()
 {
-	current = GS_LEVEL2;
 }
 
 void Level2_Initialize()
 {
+	current = GS_LEVEL2;
 }
 
 void Level2_Update()
