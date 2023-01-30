@@ -7,6 +7,9 @@
 
 AEGfxTexture* pTex1; // Pointer to Texture (Image)
 AEGfxTexture* pTex2; // Pointer to Texture (Image)
+AEGfxTexture* pTex3;
+AEGfxTexture* pTex4;
+AEGfxTexture* pTex5;
 AEGfxTexture* slimeTexture;
 AEGfxTexture* pTimerTex;
 
@@ -25,6 +28,7 @@ AEGfxVertexList* pMesh1;
 AEGfxVertexList* pMesh2; // Pointer to Mesh (Model)
 AEGfxVertexList* pMeshLine;
 AEGfxVertexList* pMeshBox;
+AEGfxVertexList* pMeshRect;
 
 AEGfxVertexList* slime;
 float slimeX, slimeY;
@@ -146,8 +150,8 @@ void Level1_Load()
 
 	// This shape is a 1 by 1 square box, rmb to use scaling
 	AEGfxTriAdd(
-		-0.5f, 0.5f, 0x00FF00FF, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0x00FFFF00, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0x00FF0FF, 1.0f, 1.0f,
+		-0.5f, -0.5f, 0x00FFFFFF, 0.0f, 1.0f,
 		0.5, -0.5f, 0x0000FFFF, 0.0f, 0.0f);
 
 	AEGfxTriAdd(
@@ -191,10 +195,23 @@ void Level1_Load()
 
 	////////////////////////////
 	// Loading textures (images)
+	AEGfxMeshStart();
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0xFFFFFFFF, 0.0f, 1.0f,// Bottom Left
+		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 1.0f, // Bottom Right
+		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 0.0f); // Top vertex
 
+	AEGfxTriAdd(
+		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 1.0f, //	Bottom Right
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 0.0f,	 //	Top Right
+		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 0.0f);//	Top Left
+	pMeshRect = AEGfxMeshEnd();
 
 	// Texture 1: From file
-	pTex1 = AEGfxTextureLoad("Assets/PlanetTexture.png");
+	pTex1 = AEGfxTextureLoad("Assets/Special_Tile.png");
+	pTex4 = AEGfxTextureLoad("Assets/Hole.png");
+	pTex5 = AEGfxTextureLoad("Assets/player_cube.png");
+	pTex3 = AEGfxTextureLoad("Assets/placeholder.png");
 	AE_ASSERT_MESG(pTex1, "Failed to create texture1!!");
 
 	// Texture 2: From file
@@ -459,7 +476,7 @@ void Level1_Update()
 		objtexY -= 0.01f;
 
 	updatePos(slimeX, slimeY);
-
+	AEGfxSetCamPosition(obj1.x, obj1.y);
 	// Game loop update end
 	///////////////////////
 }
@@ -471,17 +488,17 @@ void Level1_Draw()
 
 
 		// Drawing object 1
-	AEGfxSetRenderMode(AE_GFX_RM_COLOR);
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	// Set position for object 1
 	AEGfxSetPosition(0.f, 0.f);
 	// No tint
 	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
 	// No texture for object 1
-	AEGfxTextureSet(NULL, 0, 0);
+	AEGfxTextureSet(pTex5, 0, 0);
 	AEMtx33 scale = { 0 };
 	AEMtx33Scale(&scale, 60.f, 60.f);
 	AEMtx33 rotate = { 0 };
-	AEMtx33Rot(&rotate, PI * 2.f);
+	AEMtx33Rot(&rotate, PI * 2.5f);
 	AEMtx33 translate = { 0 };
 	AEMtx33Trans(&translate, obj1.x, obj1.y);
 	AEMtx33 transform = { 0 };
@@ -515,19 +532,18 @@ void Level1_Draw()
 
 
 	//line strips 8 vertices
-	AEGfxSetRenderMode(AE_GFX_RM_COLOR);
-	AEGfxSetPosition(0.0f, -30.0f);
-	AEGfxMeshDraw(pMeshLine, AE_GFX_MDM_LINES_STRIP);
+	
 
 
 	// Drawing object platform 1
-	AEGfxSetRenderMode(AE_GFX_RM_COLOR);
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+
 	// Set position for platform 1
 	AEGfxSetPosition(0.0f, 0.0f); //minus 20 y-axis for every platform position
 	// No tint
 	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
 	// No texture for platform 1
-	AEGfxTextureSet(NULL, 0, 0);
+	AEGfxTextureSet(pTex1, 0, 0);
 
 	scale = { 0 };
 	AEMtx33Scale(&scale, 180.f, 60.f);
@@ -543,19 +559,18 @@ void Level1_Draw()
 	// Drawing the mesh (list of triangles)
 	AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
 
-
 	// Drawing object platform 2
-	AEGfxSetRenderMode(AE_GFX_RM_COLOR);
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	// Set position for platform 2
 	AEGfxSetPosition(-180.0f, -180.0f); //minus 20 y-axis for every platform position
 	// No tint
 	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
 	// No texture for platform 2
-	AEGfxTextureSet(NULL, 0, 0);
+	AEGfxTextureSet(pTex1, 0, 0);
 	scale = { 0 };
 	AEMtx33Scale(&scale, 180.f, 60.f);
 	rotate = { 0 };
-	AEMtx33Rot(&rotate, PI * 2.f);
+	AEMtx33Rot(&rotate, 0);
 	translate = { 0 };
 	AEMtx33Trans(&translate, -180.f, -180.f);
 	transform = { 0 };
@@ -564,15 +579,14 @@ void Level1_Draw()
 	AEGfxSetTransform(transform.m);
 	// Drawing the mesh (list of triangles)
 	AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
-
 	// Drawing object platform 3
-	AEGfxSetRenderMode(AE_GFX_RM_COLOR);
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	// Set position for platform 3
 	AEGfxSetPosition(180.0f, -180.0f); //minus 20 y-axis for every platform position
 	// No tint
 	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
 	// No texture for platform 3
-	AEGfxTextureSet(NULL, 0, 0);
+	AEGfxTextureSet(pTex1, 0, 0);
 	scale = { 0 };
 	AEMtx33Scale(&scale, 180.f, 60.f);
 	rotate = { 0 };
@@ -599,6 +613,23 @@ void Level1_Draw()
 	AEGfxMeshDraw(slime, AE_GFX_MDM_TRIANGLES);
 	
 
+
+	AEGfxSetTransparency(1.0f);
+	AEGfxTextureSet(pTex4, 0.0f, 0.0f);
+	scale = { 0 };
+	AEMtx33Scale(&scale, 810.f, 700.f);
+	rotate = { 0 };
+	AEMtx33Rot(&rotate, 0);
+	translate = { 0 };
+	AEMtx33Trans(&translate, obj1.x, obj1.y);
+	transform = { 0 };
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	// Drawing the mesh (list of triangles)
+	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+	AEGfxMeshDraw(pMeshRect, AE_GFX_MDM_TRIANGLES);
+
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
 	AEGfxTextureSet(pTimerTex, 0, 0);
@@ -615,12 +646,13 @@ void Level1_Draw()
 	//AEMtx33 rotate = { 0 };
 	AEMtx33Rot(&rotate, PI);
 	//AEMtx33 translate = { 0 };
-	AEMtx33Trans(&translate, 0, 250);
+	AEMtx33Trans(&translate, obj1.x, obj1.y+250);
 	//AEMtx33 transform = { 0 };
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMeshTimer, AE_GFX_MDM_TRIANGLES);
+
 }
 
 void Level1_Free()

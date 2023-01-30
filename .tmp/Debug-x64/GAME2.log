@@ -1,6 +1,6 @@
 ﻿  Level1.cpp
-C:\Users\joeyc\OneDrive\Documents\GitHub\GAM150\GAME2\Level1.cpp(606,48): warning C4244: '+=': conversion from 'f64' to 'f32', possible loss of data
-  GAME2.vcxproj -> C:\Users\joeyc\OneDrive\Documents\GitHub\GAM150\bin\Debug-x64\GAME2.exe
-  6 File(s) copied
+C:\Users\User\Desktop\GAM150\GAME2\Level1.cpp(637,48): warning C4244: '+=': conversion from 'f64' to 'f32', possible loss of data
+  GAME2.vcxproj -> C:\Users\User\Desktop\GAM150\bin\Debug-x64\GAME2.exe
+  10 File(s) copied
   1 File(s) copied
   1 File(s) copied
