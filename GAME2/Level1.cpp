@@ -5,13 +5,11 @@
 #include "function.hpp"
 #include "Enemy.h"
 
-AEGfxVertexList* pMesh = 0;
-AEGfxTexture* TimerTex = AEGfxTextureLoad("Timer/Darkness.png");
-
-
 AEGfxTexture* pTex1; // Pointer to Texture (Image)
 AEGfxTexture* pTex2; // Pointer to Texture (Image)
 AEGfxTexture* slimeTexture;
+AEGfxTexture* pTimerTex;
+
 /*
 AEVec2 pt1;
 AEVec2 pt2;
@@ -22,6 +20,7 @@ AEVec2 pt6;
 AEVec2 pt7;
 AEVec2 pt8;
 */
+AEGfxVertexList* pMeshTimer;
 AEGfxVertexList* pMesh1;
 AEGfxVertexList* pMesh2; // Pointer to Mesh (Model)
 AEGfxVertexList* pMeshLine;
@@ -176,6 +175,20 @@ void Level1_Load()
 	slime = AEGfxMeshEnd();
 	AE_ASSERT_MESG(slime, "Failed to create slime mesh");
 
+	AEGfxMeshStart();
+
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0xFFFF00FF, 0.0f, 0.0f,
+		0.5f, -0.5f, 0xFFFFFF00, 1.0f, 0.0f,
+		-0.5f, 0.5f, 0xFF00FFFF, 0.0f, 1.0f);
+
+	AEGfxTriAdd(
+		0.5f, -0.5f, 0xFFFFFFFF, 1.0f, 0.0f,
+		0.5f, 0.5f, 0xFFFFFFFF, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0xFFFFFFFF, 0.0f, 1.0f);
+
+	pMeshTimer = AEGfxMeshEnd();
+
 	////////////////////////////
 	// Loading textures (images)
 
@@ -190,6 +203,8 @@ void Level1_Load()
 
 	slimeTexture = AEGfxTextureLoad("Assets/slime.png");
 	AE_ASSERT_MESG(slimeTexture, "Failed to load iamge");
+
+	pTimerTex = AEGfxTextureLoad("Assets/Timer.png");
 
 	// Loading textures (images) end
 	//////////////////////////////////
@@ -583,6 +598,29 @@ void Level1_Draw()
 	AEGfxTextureSet(slimeTexture, 0.0f, 0.0f);
 	AEGfxMeshDraw(slime, AE_GFX_MDM_TRIANGLES);
 	
+
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
+	AEGfxTextureSet(pTimerTex, 0, 0);
+	static f32 elapsed = 0;
+	elapsed += AEFrameRateControllerGetFrameTime();
+	//AEMtx33 scale = { 0 };
+	if ((550.f - 50.0f * elapsed) > 0) {
+		AEMtx33Scale(&scale, 550.f - 50.0f * elapsed, 50.f);
+	}
+	else {
+		AEMtx33Scale(&scale, 0, 0);
+	}
+
+	//AEMtx33 rotate = { 0 };
+	AEMtx33Rot(&rotate, PI);
+	//AEMtx33 translate = { 0 };
+	AEMtx33Trans(&translate, 0, 250);
+	//AEMtx33 transform = { 0 };
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(pMeshTimer, AE_GFX_MDM_TRIANGLES);
 }
 
 void Level1_Free()
@@ -594,6 +632,8 @@ void Level1_Unload()
 {
 	AEGfxTextureUnload(pTex1);
 	AEGfxTextureUnload(pTex2);
+	AEGfxTextureUnload(pTimerTex);
+	AEGfxMeshFree(pMeshTimer);
 	AEGfxMeshFree(pMesh1);
 	AEGfxMeshFree(pMesh2);
 	AEGfxMeshFree(pMeshLine);
