@@ -26,7 +26,6 @@ AEVec2 pt8;
 */
 AEGfxVertexList* pMeshTimer;
 AEGfxVertexList* pMesh1;
-AEGfxVertexList* pMesh2; // Pointer to Mesh (Model)
 AEGfxVertexList* pMeshLine;
 AEGfxVertexList* pMeshBox;
 AEGfxVertexList* pMeshRect;
@@ -70,8 +69,7 @@ AEVec2 plf3;
 AEVec2 test = { 0.f, 1.f };
 
 
-AEVec2 testtest = { 0.f, 0.f };
-AEVec2 testtest2 = { 0.f, 0.f };
+
 
 
 int counter = 0; // Counter to swap textures
@@ -104,26 +102,6 @@ void Level1_Load()
 	AE_ASSERT_MESG(pMesh1, "Failed to create mesh 1!!");
 	
 
-
-	// Informing the library that we're about to start adding triangles
-	AEGfxMeshStart();
-
-	// This shape has 2 triangles
-	AEGfxTriAdd(
-		-30.0f, -30.0f, 0x00FF00FF, 0.0f, 1.0f,
-		30.0f, -30.0f, 0x00FFFF00, 1.0f, 1.0f,
-		-30.0f, 30.0f, 0x0000FFFF, 0.0f, 0.0f);
-
-	AEGfxTriAdd(
-		30.0f, -30.0f, 0x00FFFFFF, 1.0f, 1.0f,
-		30.0f, 30.0f, 0x00FFFFFF, 1.0f, 0.0f,
-		-30.0f, 30.0f, 0x00FFFFFF, 0.0f, 0.0f);
-
-	// Saving the mesh (list of triangles) in pMesh2
-
-	pMesh2 = AEGfxMeshEnd();
-	AE_ASSERT_MESG(pMesh2, "Failed to create mesh 2!!");
-	
 
 
 	// Informing the library that we're about to start adding vertices
@@ -271,7 +249,10 @@ void Level1_Update()
 
 			///////////////////
 		// Game loop update
-		
+
+		// Press escape button to quit
+	if (AEInputCheckTriggered(AEVK_ESCAPE)) next = GS_QUIT;
+
 
 		// Blending mode
 	if (AEInputCheckCurr(AEVK_1))
@@ -282,19 +263,9 @@ void Level1_Update()
 		AEGfxSetBlendMode(AE_GFX_BM_ADD);
 
 
+
+
 	// Object 1 Control
-	if (AEInputCheckCurr(AEVK_UP))
-		obj1.y += 2.0f;
-	else if (AEInputCheckCurr(AEVK_DOWN))
-		obj1.y -= 2.0f;
-
-	if (AEInputCheckCurr(AEVK_LEFT))
-		obj1.x -= 2.0f;
-	else if (AEInputCheckCurr(AEVK_RIGHT))
-		obj1.x += 2.0f;
-
-
-	// Object 1 Control (modified) kekekekekekkekekekekkekekekekkekekekekekekekekekekekkekekekekkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
 	if (AEInputCheckTriggered(AEVK_SPACE) && (false == falling) && (false == jump))
 	{
 		obj1Y_min = obj1.y;
@@ -440,11 +411,6 @@ void Level1_Update()
 	}
 
 
-	testtest = { 500.f, 500.f };
-	testtest2 = { 0.f, 80.f };
-	std::cout << AECalcDistRectToRect(&testtest, 20.f, 20.f, &testtest2, 20.f, 20.f, nullptr) << std::endl;
-
-
 
 
 
@@ -498,27 +464,6 @@ void Level1_Draw()
 	// Drawing the mesh (list of triangles)
 	AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
 
-	/*
-	// Drawing object 2 - (first) - No tint
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	// Set position for object 2
-	AEGfxSetPosition(100.0f, -60.0f);
-	// No tint
-	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Set Transparency
-	AEGfxSetTransparency(1.0f);
-	// Set texture
-	++counter;
-	if (counter < 120)
-		AEGfxTextureSet(pTex1, objtexX, objtexY);		// Same object, different texture
-	else if (counter < 240)
-		AEGfxTextureSet(pTex2, objtexX, objtexY);		// Same object, different texture
-	else
-	{
-		AEGfxTextureSet(pTex1, objtexX, objtexY);		// Same object, different texture
-		counter = 0;
-	}
-	AEGfxMeshDraw(pMesh2, AE_GFX_MDM_TRIANGLES);*/
 
 
 	//line strips 8 vertices
@@ -662,7 +607,7 @@ void Level1_Unload()
 	AEGfxTextureUnload(pTimerTex);
 	AEGfxMeshFree(pMeshTimer);
 	AEGfxMeshFree(pMesh1);
-	AEGfxMeshFree(pMesh2);
+	
 	AEGfxMeshFree(pMeshLine);
 	AEGfxMeshFree(pMeshBox);
 }
