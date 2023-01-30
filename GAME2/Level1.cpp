@@ -38,11 +38,15 @@ void Level1_Update()
 	if ((550.f - 50.0f * elapsed) > 0) {
 		AEMtx33Scale(&scale, 550.f - 50.0f * elapsed, 50.f);
 	}
-	else { AEMtx33Scale(&scale, 0, 0); }
+	else { 
+		AEMtx33Scale(&scale, 0, 0);
+		next = GS_LEVEL2;
+	}
+
 	AEMtx33 rotate = { 0 };
 	AEMtx33Rot(&rotate, PI);
 	AEMtx33 translate = { 0 };
-	AEMtx33Trans(&translate, 0, 0);
+	AEMtx33Trans(&translate, 0, 250);
 	AEMtx33 transform = { 0 };
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
