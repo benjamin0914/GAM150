@@ -1,0 +1,10 @@
+*.obj
+*.log
+*.tlog
+*.ilk
+.vs/WIP/v16/.suo
+*.ipch
+*.pdb
+*.exe
+*.idb
+*.lastbuildstate
