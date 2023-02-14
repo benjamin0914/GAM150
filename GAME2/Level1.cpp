@@ -8,9 +8,10 @@
 AEGfxTexture* pTex1; // Pointer to Texture (Image)
 AEGfxTexture* pTex2; // Pointer to Texture (Image)
 AEGfxTexture* pTex3;
-AEGfxTexture* pTex4;
+AEGfxTexture* hole_big;
 AEGfxTexture* pTex5;
-AEGfxTexture* pTex6;
+AEGfxTexture* hole_small;
+AEGfxTexture* hole_none;
 AEGfxTexture* slimeTexture;
 AEGfxTexture* pTimerTex;
 
@@ -187,8 +188,9 @@ void Level1_Load()
 
 	// Texture 1: From file
 	pTex1 = AEGfxTextureLoad("Assets/Special_Tile.png");
-	pTex4 = AEGfxTextureLoad("Assets/Hole.png");
-	pTex6 = AEGfxTextureLoad("Assets/smallerhole2.png");
+	hole_big = AEGfxTextureLoad("Assets/hole_big.png");
+	hole_small = AEGfxTextureLoad("Assets/hole_small.png");
+	hole_none = AEGfxTextureLoad("Assets/hole_none.png");
 	pTex5 = AEGfxTextureLoad("Assets/player_cube.png");
 	pTex3 = AEGfxTextureLoad("Assets/placeholder.png");
 	AE_ASSERT_MESG(pTex1, "Failed to create texture1!!");
@@ -549,11 +551,41 @@ void Level1_Draw()
 
 
 	AEGfxSetTransparency(1.0f);
-	if (elapsed < 10.0f) {
-		AEGfxTextureSet(pTex4, 0.0f, 0.0f);
-	} 
-	else {
-		AEGfxTextureSet(pTex6, 0.0f, 0.0f);
+	if (elapsed < 10.f)
+	{
+		AEGfxTextureSet(hole_big, 0.0f, 0.0f);
+	}
+	else if (elapsed < 10.5f)
+	{
+		AEGfxTextureSet(hole_none, 0.0f, 0.0f);
+	}
+	else if (elapsed < 11.f)
+	{
+		AEGfxTextureSet(hole_big, 0.0f, 0.0f);
+	}
+	else if (elapsed < 11.5f)
+	{
+		AEGfxTextureSet(hole_none, 0.0f, 0.0f);
+	}
+	else if (elapsed < 12.f)
+	{
+		AEGfxTextureSet(hole_big, 0.0f, 0.0f);
+	}
+	else if (elapsed < 12.5f)
+	{
+		AEGfxTextureSet(hole_none, 0.0f, 0.0f);
+	}
+	else if (elapsed < 13.f)
+	{
+		AEGfxTextureSet(hole_big, 0.0f, 0.0f);
+	}
+	else if (elapsed < 14.f)
+	{
+		AEGfxTextureSet(hole_none, 0.0f, 0.0f);
+	}
+	else
+	{
+		AEGfxTextureSet(hole_small, 0.0f, 0.0f);
 	}
 	scale = { 0 };
 	AEMtx33Scale(&scale, 810.f, 700.f);
@@ -605,6 +637,13 @@ void Level1_Unload()
 	AEGfxTextureUnload(pTex1);
 	AEGfxTextureUnload(pTex2);
 	AEGfxTextureUnload(pTimerTex);
+
+	// Free the circle hole textures
+	AEGfxTextureUnload(hole_big);
+	AEGfxTextureUnload(hole_small);
+	AEGfxTextureUnload(hole_none);
+
+
 	AEGfxMeshFree(pMeshTimer);
 	AEGfxMeshFree(pMesh1);
 	
