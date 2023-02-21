@@ -57,7 +57,8 @@ void MainMenu_Init() {
 void MainMenu_Update() {
 	
 	// Comment this block out to see button texture
-	if (AEInputCheckTriggered(AEVK_RETURN)) next = GS_LEVEL1;
+	if (AEInputCheckTriggered(AEVK_RETURN)) 
+		next = GS_LEVEL1;
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	if (textmove > -0.23f){
 		textmove -= g_dt;

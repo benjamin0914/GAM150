@@ -5,6 +5,10 @@
 #include "function.hpp"
 #include "Enemy.h"
 
+AABB playerboundingbox;
+AABB slimeboundingbox;
+const float         BOUNDING_RECT_SIZE = 1.0f;
+
 AEGfxTexture* pTex1; // Pointer to Texture (Image)
 AEGfxTexture* pTex2; // Pointer to Texture (Image)
 AEGfxTexture* pTex3;
@@ -64,25 +68,16 @@ AEVec2 plf1;
 AEVec2 plf2;
 AEVec2 plf3;
 
-
-
 //test
 AEVec2 test = { 0.f, 1.f };
 
-
-
-
-
 int counter = 0; // Counter to swap textures
-
-
-
 
 
 void Level1_Load()
 {
 	//////////////////////////////////
-// Informing the library that we're about to start adding triangles
+	// Informing the library that we're about to start adding triangles
 	AEGfxMeshStart();
 
 	// 1 triangle at a time
@@ -101,9 +96,6 @@ void Level1_Load()
 
 	pMesh1 = AEGfxMeshEnd();
 	AE_ASSERT_MESG(pMesh1, "Failed to create mesh 1!!");
-	
-
-
 
 	// Informing the library that we're about to start adding vertices
 	AEGfxMeshStart();
@@ -248,6 +240,8 @@ void Level1_Initialize()
 void Level1_Update()
 {
 
+	if (AEInputCheckTriggered(AEVK_RETURN))
+		next = GS_LEVEL2;
 
 			///////////////////
 		// Game loop update
@@ -335,60 +329,6 @@ void Level1_Update()
 		falling = false;
 	}
 
-
-	/*
-	//gravity mechanics //always start with higher platforms
-	if ((AECalcDistPointToLineSeg(&obj1, &pt4, &pt5) >= 1.0f) && (obj1.x >= pt4.x) && (obj1.x <= pt5.x))
-	{
-		if (obj1.y > pt4.y)
-		{
-			obj1.y -= 2.0f;
-			falling = true;
-		}
-	}
-	else if ((AECalcDistPointToLineSeg(&obj1, &pt2, &pt3) >= 1.0f) && (obj1.x >= pt2.x) && (obj1.x <= pt3.x))
-	{
-		if (obj1.y > pt2.y)
-		{
-			obj1.y -= 2.0f;
-			falling = true;
-		}
-	}
-	else if ((AECalcDistPointToLineSeg(&obj1, &pt6, &pt7) >= 1.0f) && (obj1.x >= pt6.x) && (obj1.x <= pt7.x))
-	{
-		if (obj1.y > pt6.y)
-		{
-			obj1.y -= 2.0f;
-			falling = true;
-		}
-	}
-	else
-	{
-		falling = false;
-	}*/   //gravity ends
-
-	/*
-	//left wall //start with right-most wall first
-	if ((obj1.y <= pt1.y) && (obj1.y >= pt2.y))
-	{
-		if (AECalcDistPointToLineSeg(&obj1, &pt1, &pt2) <= 1.0f)
-		{
-			movement_left = false;
-		}
-		else
-		{
-			movement_left = true;
-		}
-	}*/
-	/*
-	if ((obj1.y <= pt1.y) && (obj1.y >= pt2.y))
-	{
-		if ((AECalcDistPointToLineSeg(&obj1, &pt1, &pt2) <= 1.0f) && (true == movement_left))
-		{
-			movement_left = false;
-		}
-	}*/
-
 	if (true == movement_left)
 	{
 		if (AECalcDistPointToLineSeg(&obj1, &pt1, &pt2) <= 1.0f)
@@ -412,10 +352,6 @@ void Level1_Update()
 		}
 	}
 
-
-
-
-
 	if (AEInputCheckTriggered(AEVK_M))
 		obj1.y += 130.0f;
 	if (AEInputCheckTriggered(AEVK_N))
@@ -436,6 +372,10 @@ void Level1_Update()
 
 	updatePos(slimeX, slimeY);
 	AEGfxSetCamPosition(obj1.x, obj1.y);
+
+	//Collision check
+
+	
 	// Game loop update end
 	///////////////////////
 }
@@ -537,8 +477,6 @@ void Level1_Draw()
 	// Drawing the mesh (list of triangles)
 	AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
 
-
-
 	
 	static f32 elapsed = 0;
 	elapsed += g_dt;
@@ -613,8 +551,6 @@ void Level1_Draw()
 	else {
 		AEMtx33Scale(&scale, 0, 0);
 	}
-
-
 	
 	AEMtx33Rot(&rotate, PI);
 

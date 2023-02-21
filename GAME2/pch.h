@@ -13,5 +13,6 @@
 #include "Level3.h"
 #include "System.h"
 #include "Input.h"
+#include "Enemy.h"
 
 #endif //PCH_H
