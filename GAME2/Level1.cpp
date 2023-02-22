@@ -73,6 +73,7 @@ const unsigned int	GAME_OBJ_INST_NUM_MAX = 2048;			// The total number of differ
 
 const unsigned int	SHIP_INITIAL_NUM = 3;			// initial number of ship lives
 const float			PLAYER_SIZE = 60.0f;					// player size
+const float			PLAYER_MOVEMENT = 120.0f;				// player movement (how much movement in one second)
 const float			SHIP_ACCEL_FORWARD = 40.0f;		// ship forward acceleration (in m/s^2)
 const float			SHIP_ACCEL_BACKWARD = 40.0f;		// ship backward acceleration (in m/s^2)
 const float			SHIP_ROT_SPEED = (2.0f * PI);	// ship rotation speed (degree/second)
@@ -213,7 +214,7 @@ void Level1_Load()
 
 	pObj->pMesh = AEGfxMeshEnd();
 	AE_ASSERT_MESG(pObj->pMesh, "fail to create square box mesh!!");
-	/////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -383,16 +384,24 @@ void Level1_Update()
 	}
 	else if (AEInputCheckCurr(AEVK_DOWN))
 		obj1.y -= 2.0f;
+	
 
-	if (AEInputCheckCurr(AEVK_A))
-		movement_left = true;
-	else if (AEInputCheckCurr(AEVK_D))
-		movement_right = true;
-	else
+
+	// Movement for left & right start
+	if (!AEInputCheckCurr(AEVK_A) && !AEInputCheckCurr(AEVK_D))
 	{
 		movement_left = false;
 		movement_right = false;
 	}
+	if (AEInputCheckCurr(AEVK_A))
+	{
+		movement_left = true;
+	}
+	if (AEInputCheckCurr(AEVK_D))
+	{
+		movement_right = true;
+	}
+	// Movement for left & right start
 
 
 	//jumping mechanics
@@ -441,90 +450,15 @@ void Level1_Update()
 	}
 
 
-	/*
-	//gravity mechanics //always start with higher platforms
-	if ((AECalcDistPointToLineSeg(&obj1, &pt4, &pt5) >= 1.0f) && (obj1.x >= pt4.x) && (obj1.x <= pt5.x))
-	{
-		if (obj1.y > pt4.y)
-		{
-			obj1.y -= 2.0f;
-			falling = true;
-		}
-	}
-	else if ((AECalcDistPointToLineSeg(&obj1, &pt2, &pt3) >= 1.0f) && (obj1.x >= pt2.x) && (obj1.x <= pt3.x))
-	{
-		if (obj1.y > pt2.y)
-		{
-			obj1.y -= 2.0f;
-			falling = true;
-		}
-	}
-	else if ((AECalcDistPointToLineSeg(&obj1, &pt6, &pt7) >= 1.0f) && (obj1.x >= pt6.x) && (obj1.x <= pt7.x))
-	{
-		if (obj1.y > pt6.y)
-		{
-			obj1.y -= 2.0f;
-			falling = true;
-		}
-	}
-	else
-	{
-		falling = false;
-	}*/   //gravity ends
-
-	/*
-	//left wall //start with right-most wall first
-	if ((obj1.y <= pt1.y) && (obj1.y >= pt2.y))
-	{
-		if (AECalcDistPointToLineSeg(&obj1, &pt1, &pt2) <= 1.0f)
-		{
-			movement_left = false;
-		}
-		else
-		{
-			movement_left = true;
-		}
-	}*/
-	/*
-	if ((obj1.y <= pt1.y) && (obj1.y >= pt2.y))
-	{
-		if ((AECalcDistPointToLineSeg(&obj1, &pt1, &pt2) <= 1.0f) && (true == movement_left))
-		{
-			movement_left = false;
-		}
-	}*/
-
-	if (true == movement_left)
-	{
-		if (AECalcDistPointToLineSeg(&obj1, &pt1, &pt2) <= 1.0f)
-		{
-			;
-		}
-		else
-		{
-			obj1.x -= 5.0f;
-		}
-	}
-	if (true == movement_right)
-	{
-		if (AECalcDistPointToLineSeg(&obj1, &pt7, &pt8) <= 1.0f)
-		{
-			;
-		}
-		else
-		{
-			obj1.x += 5.0f;
-		}
-	}
 
 
 
 
 
 	if (AEInputCheckTriggered(AEVK_M))
-		obj1.y += 130.0f;
+		spPlayer->velCurr.x += 10.0f;
 	if (AEInputCheckTriggered(AEVK_N))
-		obj1.y -= 130.0f;
+		spPlayer->velCurr.x -= 10.0f;
 
 
 
@@ -535,13 +469,23 @@ void Level1_Update()
 	////////////////////////
 
 
-	
+	// Time-based movement for player
+	if (true == movement_left)
+	{
+		// Make sure to check for left wall before actually moving
+		spPlayer->posCurr.x -= PLAYER_MOVEMENT * g_dt;
+	}
+	if (true == movement_right)
+	{
+		// Make sure to check for right wall before actually moving
+		spPlayer->posCurr.x += PLAYER_MOVEMENT * g_dt;
+	}
 
 
 	// Constant update of Player position from its velocity
-	AEVec2 shipnewvel;
-	AEVec2Scale(&shipnewvel, &spPlayer->velCurr, g_dt);
-	AEVec2Add(&spPlayer->posCurr, &spPlayer->posCurr, &shipnewvel);
+	AEVec2 playernewvel;
+	AEVec2Scale(&playernewvel, &spPlayer->velCurr, g_dt);
+	AEVec2Add(&spPlayer->posCurr, &spPlayer->posCurr, &playernewvel);
 
 
 	// ======================================================
@@ -835,7 +779,9 @@ void Level1_Draw()
 	AEGfxTextureSet(NULL, 0, 0);
 
 
-	// draw all object instances in the list
+	// =========================
+	// Draw all object instances in the list
+	// =========================
 	for (unsigned long i = 0; i < GAME_OBJ_INST_NUM_MAX; i++)
 	{
 		GameObjInst* pInst = sGameObjInstList + i;
@@ -871,12 +817,17 @@ void Level1_Draw()
 
 void Level1_Free()
 {
-	// kill all object instances in the array using "gameObjInstDestroy"
+	// =========================
+	// Set all object instance flag to 0
+	// =========================
 	for (unsigned long i = 0; i < GAME_OBJ_INST_NUM_MAX; i++)
 	{
 		gameObjInstDestroy(sGameObjInstList + i);
 	}
 
+	// =========================
+	// Set player flag to 0
+	// =========================
 	gameObjInstDestroy(spPlayer);
 }
 
@@ -898,12 +849,19 @@ void Level1_Unload()
 
 
 
-	// free all mesh data (shapes) of each object using "AEGfxTriFree"
+	// =========================
+	// Free all meshes
+	// =========================
 	while (--sGameObjNum != 0)
 	{
 		AEGfxMeshFree((sGameObjList + sGameObjNum)->pMesh);
 	}
 	AEGfxMeshFree((sGameObjList + sGameObjNum)->pMesh);
+
+
+	// =========================
+	// Unload all textures
+	// =========================
 	AEGfxTextureUnload(playerTex);
 }
 
