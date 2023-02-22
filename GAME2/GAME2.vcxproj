@@ -100,6 +100,7 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\Alpha_Engine.dll" "$(OutDir)" 
   <ItemGroup>
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="function.cpp" />
+    <ClCompile Include="GameObj.cpp" />
     <ClCompile Include="Level1.cpp" />
     <ClCompile Include="Level2.cpp" />
     <ClCompile Include="Level3.cpp" />
@@ -113,6 +114,7 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\Alpha_Engine.dll" "$(OutDir)" 
   <ItemGroup>
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="function.hpp" />
+    <ClInclude Include="GameObj.h" />
     <ClInclude Include="GameStateList.h" />
     <ClInclude Include="GameStateManager.h" />
     <ClInclude Include="MainMenu.h" />

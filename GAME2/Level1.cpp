@@ -63,15 +63,26 @@ AEVec2 test = { 0.f, 1.f };
 
 int counter = 0; // Counter to swap textures
 
-
+// pointer to the ship object
+static GameObjInst* player;								
 
 
 
 void Level1_Load()
 {
 	//////////////////////////////////
+	// zero the game object array
+	memset(sGameObjList, 0, sizeof(GameObj) * GAME_OBJ_NUM_MAX);
+	// No game objects (shapes) at this point
+	sGameObjNum = 0;
 
+	// zero the game object instance array
+	memset(sGameObjInstList, 0, sizeof(GameObjInst) * GAME_OBJ_INST_NUM_MAX);
+	// No game object instances (sprites) at this point
+	sGameObjInstNum = 0;
 
+	// load/create mesh data
+	GameObj* pObj;
 
 	// Informing the library that we're about to start adding vertices
 	AEGfxMeshStart();
@@ -90,7 +101,8 @@ void Level1_Load()
 	pMeshLine = AEGfxMeshEnd();
 	AE_ASSERT_MESG(pMeshLine, "Failed to create line mesh!!");
 
-
+	pObj = sGameObjList + sGameObjNum++;
+	pObj->type = TYPE_PLAYER;
 
 	// Informing the library that we're about to start adding vertices
 	AEGfxMeshStart();
@@ -107,9 +119,40 @@ void Level1_Load()
 		0.5f, -0.5f, 0x00FFFFFF, 0.0f, 0.0f);
 
 
-	pMeshBox = AEGfxMeshEnd();
-	AE_ASSERT_MESG(pMeshBox, "Failed to create square box mesh!!");
+	pObj->pMesh = AEGfxMeshEnd();
+	AE_ASSERT_MESG(pObj->pMesh, "Failed to create square box mesh!!");
 
+	//INITIALIZING PLAYTEXTURE
+	pObj->pTexture = AEGfxTextureLoad("Assets/player_cube.png");
+
+
+	/// <summary>
+	/// SLIMEEEEEEEEEEEE
+	/// </summary>
+	pObj = sGameObjList + sGameObjNum++;
+	pObj->type = TYPE_BLOB;
+
+	// Informing the library that we're about to start adding vertices
+	AEGfxMeshStart();
+
+	// This shape is a 1 by 1 square box, rmb to use scaling
+	AEGfxTriAdd(
+		-0.5f, -0.5f, 0x00FF00FF, 0.0f, 1.0f,
+		0.5f, -0.5f, 0x00FFFF00, 0.25f, 1.0f,
+		-0.5f, 0.5f, 0x0000FFFF, 0.0f, 0.0f);
+
+	AEGfxTriAdd(
+		0.5f, -0.5f, 0x00FFFFFF, 0.25f, 1.0f,
+		0.5f, 0.5f, 0x00FFFFFF, 0.25f, 0.0f,
+		-0.5f, 0.5f, 0x00FFFFFF, 0.0f, 0.0f);
+
+
+	pObj->pMesh = AEGfxMeshEnd();
+	AE_ASSERT_MESG(pObj->pMesh, "Failed to create square box mesh!!");
+
+	pObj->pTexture = AEGfxTextureLoad("Assets/slime.png");
+
+	/*
 	//SLIME TEXT
 	AEGfxMeshStart();
 
@@ -125,7 +168,7 @@ void Level1_Load()
 
 	slime = AEGfxMeshEnd();
 	AE_ASSERT_MESG(slime, "Failed to create slime mesh");
-
+	*/
 
 	////////////////////////////
 	// Loading textures (images)
@@ -146,12 +189,12 @@ void Level1_Load()
 	hole_big = AEGfxTextureLoad("Assets/hole_big.png");
 	hole_small = AEGfxTextureLoad("Assets/hole_small.png");
 	hole_none = AEGfxTextureLoad("Assets/hole_none.png");
-	playerTex = AEGfxTextureLoad("Assets/player_cube.png");
+	//playerTex = AEGfxTextureLoad("Assets/player_cube.png");
 	AE_ASSERT_MESG(floorTex, "Failed to create texture1!!");
 
 
-	slimeTexture = AEGfxTextureLoad("Assets/slime.png");
-	AE_ASSERT_MESG(slimeTexture, "Failed to load iamge");
+	//slimeTexture = AEGfxTextureLoad("Assets/slime.png");
+	//AE_ASSERT_MESG(slimeTexture, "Failed to load iamge");
 
 	pTimerTex = AEGfxTextureLoad("Assets/Timer.png");
 
@@ -194,6 +237,21 @@ void Level1_Initialize()
 	AEGfxSetBackgroundColor(0.4f, 0.5f, 0.9f);
 	////////////////////////////////
 // Creating the objects (Shapes)
+
+	AEVec2 posP;
+	AEVec2Zero(&posP);
+	AEVec2 velP;
+	AEVec2Zero(&velP);
+
+	player = gameObjInstCreate(TYPE_PLAYER, 1.0f, &posP, &velP, 0.0f);
+
+	AEVec2 pos1;
+	AEVec2Set(&pos1, 110.0f, -130.0f);
+	AEVec2 vel1;
+	AEVec2Set(&vel1, 10.0f, 0.0f);
+
+	// Create objinstances
+	gameObjInstCreate(TYPE_BLOB, 1.0f, &pos1, &vel1, 0.0f);
 }
 
 void Level1_Update()
@@ -388,6 +446,27 @@ void Level1_Update()
 	AEGfxSetCamPosition(obj1.x, obj1.y);
 	// Game loop update end
 	///////////////////////
+
+	// =================================================================================================
+	for (unsigned long i = 0; i < GAME_OBJ_INST_NUM_MAX; i++)
+	{
+		GameObjInst* pInst = sGameObjInstList + i;
+		AEMtx33		 trans, rot, scale;
+
+		// skip non-active object
+		if ((pInst->flag & FLAG_ACTIVE) == 0)
+			continue;
+
+		// Compute the scaling matrix
+		// Compute the rotation matrix 
+		// Compute the translation matrix
+		// Concatenate the 3 matrix in the correct order in the object instance's "transform" matrix
+		AEMtx33Scale(&scale, pInst->scale, pInst->scale);
+		AEMtx33Rot(&rot, pInst->dirCurr);
+		AEMtx33Trans(&trans, pInst->posCurr.x, pInst->posCurr.y);
+		AEMtx33Concat(&pInst->transform, &rot, &scale);
+		AEMtx33Concat(&pInst->transform, &trans, &pInst->transform);
+	}
 }
 
 void Level1_Draw()
@@ -607,12 +686,36 @@ void Level1_Draw()
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(pMeshRect, AE_GFX_MDM_TRIANGLES);
 	/// <Draw Timer Bar end>
-	
+	char strBuffer[1024];
+
+	AEGfxSetRenderMode(AE_GFX_RM_COLOR);
+	AEGfxTextureSet(NULL, 0, 0);
+
+	// ========================================================================================
+	// draw all object instances in the list
+	for (unsigned long i = 0; i < GAME_OBJ_INST_NUM_MAX; i++)
+	{
+		GameObjInst* pInst = sGameObjInstList + i;
+
+		// skip non-active object
+		if ((pInst->flag & FLAG_ACTIVE) == 0)
+			continue;
+
+		// Set the current object instance's transform matrix using "AEGfxSetTransform"
+		// Draw the shape used by the current object instance using "AEGfxMeshDraw"
+		AEGfxSetTransform(pInst->transform.m);
+		AEGfxMeshDraw(pInst->pObject->pMesh, AE_GFX_MDM_TRIANGLES);
+	}
 }
 
 void Level1_Free()
 {
-	
+	// kill all object instances in the array using "gameObjInstDestroy"
+	for (unsigned int i = 0; i < GAME_OBJ_INST_NUM_MAX; ++i) {
+		GameObjInst* pInst = sGameObjInstList + i;
+
+		gameObjInstDestroy(pInst);
+	}
 }
 
 void Level1_Unload()
@@ -630,4 +733,11 @@ void Level1_Unload()
 	AEGfxMeshFree(pMeshLine);
 	AEGfxMeshFree(pMeshBox);
 	AEGfxMeshFree(pMeshRect);
+
+	// free all mesh data (shapes) of each object using "AEGfxTriFree"
+	for (unsigned long i = 0; i < sGameObjNum; i++)
+	{
+		GameObj* pInst = sGameObjList + i;
+		AEGfxMeshFree(pInst->pMesh);
+	}
 }

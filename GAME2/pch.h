@@ -13,5 +13,6 @@
 #include "Level3.h"
 #include "System.h"
 #include "Input.h"
+#include "GameObj.h"
 
 #endif //PCH_H
