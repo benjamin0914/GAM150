@@ -4,6 +4,10 @@
 #include "AEEngine.h"
 #include "function.hpp"
 #include "Enemy.h"
+#include <string>
+#include "Globals.h"
+#include "BinaryMap.h"
+#include "Tiles.h"
 
 AEGfxTexture* floorTex; // Pointer to floor image texture
 AEGfxTexture* hole_big;
@@ -57,8 +61,8 @@ AEVec2 plf3;
 //test
 AEVec2 test = { 0.f, 1.f };
 
-
-
+std::vector<Tiles> tilemap;
+std::vector <std::vector <Tiles>*> tileManager;
 
 
 int counter = 0; // Counter to swap textures
@@ -71,8 +75,16 @@ void Level1_Load()
 {
 	//////////////////////////////////
 
+	static const std::string BaseLevelString{ "./Assets/Levels/Level" };
 
+	std::string File = BaseLevelString + std::to_string(LEVELS::Level) + ".txt";
 
+	if (!ImportMapDataFromFile(File.c_str())) {
+		next = GS_MAINMENU;
+	}
+	std::cout << File;
+
+	Tiles::LoadTex();
 	// Informing the library that we're about to start adding vertices
 	AEGfxMeshStart();
 
@@ -161,8 +173,30 @@ void Level1_Load()
 
 }
 
+
 void Level1_Initialize()
 {
+	f32 grid_height{ static_cast<f32>(Map_Height) }, grid_width{ static_cast<f32>(Map_Width) };
+	for (int i = 0; i < Map_Height; ++i)
+	{
+		for (int j = 0; j < Map_Width; ++j)
+		{ // Iterate through mapdata array and construct objects at position [i][j] (Y/X)
+			if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::EMPTY) || MapData[i][j] >= static_cast<int>(TYPE_OBJECT::MAX))
+			{
+				continue;
+			}
+			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::GRASS))
+			{
+				Tiles::AddTile(tilemap, TileType::Grass, grid_width, grid_height, AEVec2Set(j * grid_width, i * grid_height));
+			}
+			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::GREY))
+			{
+				Tiles::AddTile(tilemap, TileType::Grey, grid_width, grid_height, AEVec2Set(j * grid_width, i * grid_height));
+			}
+			
+		}
+	}
+	tileManager.push_back(&tilemap);
 	/*
 	AEVec2Set(&pt1, -250.f, 200.0f);
 	AEVec2Set(&pt2, -250.f, 170.0f);
@@ -401,78 +435,15 @@ void Level1_Draw()
 	AEMtx33 transform = { 0 };
 	
 	
-
+	for (size_t i = 0; i < tilemap.size(); ++i)
+	{
+		tilemap[i].Render();
+	}
 
 
 	//line strips 8 vertices
 	
 
-	/// <Draw top platform start>
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	// Set position
-	AEGfxSetPosition(0.0f, 0.0f); //minus 20 y-axis for every platform position
-	// No tint
-	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Floor texture
-	AEGfxTextureSet(floorTex, 0, 0);
-
-	scale = { 0 };
-	AEMtx33Scale(&scale, 180.f, 60.f);
-	rotate = { 0 };
-	AEMtx33Rot(&rotate, PI * 2.f);
-	translate = { 0 };
-	AEMtx33Trans(&translate, plf1.x, plf1.y);
-	transform = { 0 };
-	AEMtx33Concat(&transform, &rotate, &scale);
-	AEMtx33Concat(&transform, &translate, &transform);
-	AEGfxSetTransform(transform.m);
-	AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
-	/// <Draw top platform end>
-
-
-	/// <Draw left platform start>
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	// Set position
-	AEGfxSetPosition(-180.0f, -180.0f);
-	// No tint
-	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Floor texture
-	AEGfxTextureSet(floorTex, 0, 0);
-	scale = { 0 };
-	AEMtx33Scale(&scale, 180.f, 60.f);
-	rotate = { 0 };
-	AEMtx33Rot(&rotate, 0);
-	translate = { 0 };
-	AEMtx33Trans(&translate, -180.f, -180.f);
-	transform = { 0 };
-	AEMtx33Concat(&transform, &rotate, &scale);
-	AEMtx33Concat(&transform, &translate, &transform);
-	AEGfxSetTransform(transform.m);
-	AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
-	/// <Draw left platform end>
-
-
-
-	/// <Draw right platform start>
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	// Set position
-	AEGfxSetPosition(180.0f, -180.0f);
-	// No tint
-	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Floor texture
-	AEGfxTextureSet(floorTex, 0, 0);
-	scale = { 0 };
-	AEMtx33Scale(&scale, 180.f, 60.f);
-	rotate = { 0 };
-	AEMtx33Rot(&rotate, PI * 2.f);
-	translate = { 0 };
-	AEMtx33Trans(&translate, 180.f, -180.f);
-	transform = { 0 };
-	AEMtx33Concat(&transform, &rotate, &scale);
-	AEMtx33Concat(&transform, &translate, &transform);
-	AEGfxSetTransform(transform.m);
-	AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
-	/// <Draw right platform end>
 
 
 
