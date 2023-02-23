@@ -107,7 +107,9 @@ int ImportMapDataFromFile(const char* FileName)
 		else if (i == 1)     //loop 1 will read Map_Height
 			Map_Height = std::stoi(Map);
 	}
-
+	for (EntitySizes i = static_cast<EntitySizes>(0); i < EntitySizes::MAX; ++i) {
+		ifs >> EntitySizeArray[static_cast<int>(i)].x >> EntitySizeArray[static_cast<int>(i)].y;
+	}
 
 
 	MapData = new int* [Map_Height];

@@ -221,7 +221,7 @@ void Level1_Initialize()
 	plf3 = { 180.f, -180.f };
 
 	jump = { false };
-	falling = { false };
+	falling = { true };
 	movement_left = { false };
 	movement_right = { false };
 
@@ -316,7 +316,7 @@ void Level1_Update()
 	}
 	else
 	{
-		falling = false;
+		//falling = false;
 	}
 
 
@@ -479,7 +479,8 @@ void Level1_Draw()
 
 	/// <Draw left platform start>
 	static f32 elapsed = 0;
-	elapsed += g_dt;
+	//temp disable for testing
+	//elapsed += g_dt;
 	AEGfxSetTransparency(1.0f);
 	if (elapsed < 10.f)
 	{

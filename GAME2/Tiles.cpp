@@ -24,10 +24,7 @@ Tiles::Tiles(AEGfxTexture* filepath, const f32 width, const f32 height) : image(
 	
 }
 void Tiles::Render() {
-	
 		image.Draw_Texture(255.0f);
-	
-	
 }
 void Tiles::AddTile(std::vector<Tiles>& tile, TileType type, const f32 width, const f32 height, AEVec2 pos) {
 	AEGfxTexture* temp = tileTex[static_cast<int>(type)];
