@@ -7,6 +7,8 @@
 #include "function.hpp"
 #include <iostream>
 #include "Enemy.h"
+#include "Graphics.h"
+
 #include "GameStateManager.h"
 #include "GameStateList.h"
 
@@ -58,6 +60,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
 	// WHERE LOADING TEXTURES SUPPOSED TO BE
+	Graphics::Load_Meshes();
 
 	//////////////////////////////////
 	// Creating Fonts	

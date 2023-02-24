@@ -4,6 +4,11 @@
 #include "AEEngine.h"
 #include "function.hpp"
 #include "Enemy.h"
+#include <string>
+#include "Globals.h"
+#include "BinaryMap.h"
+#include "Tiles.h"
+#include "Player.h"
 
 AEGfxTexture* floorTex; // Pointer to floor image texture
 AEGfxTexture* hole_big;
@@ -55,7 +60,11 @@ AEVec2 plf3;
 //test
 AEVec2 test = { 0.f, 1.f };
 
+std::vector<Tiles> tilemap;
+std::vector <std::vector <Tiles>*> tileManager;
+extern AEVec2 EntitySizeArray[static_cast<int>(EntitySizes::MAX)];
 
+Player man;
 
 
 
@@ -177,6 +186,16 @@ void					gameObjInstDestroy(GameObjInst* pInst);
 
 void Level1_Load()
 {
+
+	static const std::string BaseLevelString{ "./Assets/Levels/Level" };
+
+	std::string File = BaseLevelString + std::to_string(LEVELS::Level) + ".txt";
+
+	if (!ImportMapDataFromFile(File.c_str())) {
+		next = GS_MAINMENU;
+	}
+	Tiles::LoadTex();
+	Player::LoadTex();
 	// zero the game object array
 	memset(sGameObjList, 0, sizeof(GameObj) * GAME_OBJ_NUM_MAX);
 	// No game objects (shapes) at this point
@@ -320,6 +339,46 @@ void Level1_Initialize()
 	spPlayer = gameObjInstCreate(TYPE_PLAYER, PLAYER_SIZE, &init_ship_pos, &init_ship_vel, PI / 2.f);
 	AE_ASSERT(spPlayer);
 
+	f32 grid_height{ static_cast<f32>(Map_Height) }, grid_width{ static_cast<f32>(Map_Width) };
+	for (int i = 0; i < Map_Height; ++i)
+	{
+		for (int j = 0; j < Map_Width; ++j)
+		{ // Iterate through mapdata array and construct objects at position [i][j] (Y/X)
+			if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::EMPTY) || MapData[i][j] >= static_cast<int>(TYPE_OBJECT::MAX))
+			{
+				continue;
+			}
+			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::BLACK))
+			{
+				Tiles::AddTile(tilemap, TileType::Black, grid_width, grid_height, AEVec2Set(j * grid_width, i * grid_height));
+			}
+			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::DIRT))
+			{
+				Tiles::AddTile(tilemap, TileType::Dirt, grid_width, grid_height, AEVec2Set(j * grid_width, i * grid_height));
+			}
+			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::PLAYER))
+			{
+				Player::CreatePlayer(man, AEVec2Set(j * grid_width, i * grid_height),
+					//Supposed to set the player size, but no nid for now
+					EntitySizeArray[static_cast<int>(EntitySizes::PLAYER)].x, EntitySizeArray[static_cast<int>(EntitySizes::PLAYER)].y);
+
+				//TO DO: MOVE OBJ1 TO PLAYER CLASS
+				//HOLY SHIT HARDCODED AS FUCK SPAWN FIX IN FUTURE
+				obj1.x = (j * grid_width) - (grid_width * 3.5f);
+				obj1.y = -(i * grid_height) + (grid_height * 4.28f);
+			}
+			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::SLIME))
+			{
+				//NOT WORKING YET 
+				slime_pos.x = (j * grid_width) - (grid_width * 3.5f);
+				slime_pos.y = -(i * grid_height) + (grid_height * 4.28f);
+
+			}
+		}
+	}
+	tileManager.push_back(&tilemap);
+
+
 
 	/*
 	AEVec2Set(&pt1, -250.f, 200.0f);
@@ -337,7 +396,7 @@ void Level1_Initialize()
 
 	jump_timer = 0.0f;
 
-	obj1 = { 0.f, 0.f };
+	//obj1 = { 0.f, 0.f };
 	plf1 = { 0.f, -80.f };
 	plf2 = { -180.f, -180.f };
 	plf3 = { 180.f, -180.f };
@@ -358,7 +417,8 @@ void Level1_Update()
 
 			///////////////////
 		// Game loop update
-
+		//HERE IS WHERE U UPDATE PLAYER POS
+	man.SetPos(obj1);
 		// Press escape button to quit
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) next = GS_QUIT;
 
@@ -374,7 +434,7 @@ void Level1_Update()
 
 
 
-	// Object 1 Control
+/*// Object 1 Control
 	if (AEInputCheckTriggered(AEVK_SPACE) && (false == falling) && (false == jump))
 	{
 		obj1Y_min = obj1.y;
@@ -419,7 +479,7 @@ void Level1_Update()
 		/*else if (jump_timer < duration)
 		{
 			obj1.y = EaseOutCubic(obj1Y_max, obj1Y_min, jump_timer / duration);
-		}*/
+		}
 		else if (jump_timer >= duration)
 		{
 			jump_timer = 0.0f;
@@ -450,7 +510,7 @@ void Level1_Update()
 	}
 
 
-
+	*/
 
 
 
@@ -464,7 +524,8 @@ void Level1_Update()
 
 
 	updatePos(slime_pos.x, slime_pos.y);
-	AEGfxSetCamPosition(obj1.x, obj1.y);
+	//
+	// AEGfxSetCamPosition(obj1.x, obj1.y);
 	// Game loop update end
 	////////////////////////
 
@@ -549,6 +610,7 @@ void Level1_Update()
 		AEMtx33Concat(&(pInst->transform), &trans, &pInst->transform);
 
 	}
+	
 }
 
 void Level1_Draw()
@@ -567,7 +629,12 @@ void Level1_Draw()
 
 	//line strips 8 vertices
 	
+	for (size_t i = 0; i < tilemap.size(); ++i)
+	{
+		tilemap[i].Render();
+	}
 
+	man.Render();
 	/// <Draw top platform start>
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	// Set position
@@ -721,29 +788,6 @@ void Level1_Draw()
 	AEGfxMeshDraw(pMeshRect, AE_GFX_MDM_TRIANGLES);
 
 
-
-
-	/// <Draw Player start>
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	// Player Position
-	AEGfxSetPosition(0.f, 0.f);
-	// Player no tint
-	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Player texture
-	AEGfxTextureSet(playerTex, 0, 0);
-	scale = { 0 };
-	AEMtx33Scale(&scale, 60.f, 60.f);
-	rotate = { 0 };
-	AEMtx33Rot(&rotate, PI * 2.5f);
-	translate = { 0 };
-	AEMtx33Trans(&translate, obj1.x, obj1.y);
-	transform = { 0 };
-	AEMtx33Concat(&transform, &rotate, &scale);
-	AEMtx33Concat(&transform, &translate, &transform);
-	AEGfxSetTransform(transform.m);
-	// Drawing the mesh (list of triangles)
-	AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
-	/// <Draw Player end>
 
 
 

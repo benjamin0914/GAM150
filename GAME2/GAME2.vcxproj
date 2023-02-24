@@ -98,8 +98,12 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\Alpha_Engine.dll" "$(OutDir)" 
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BinaryMap.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="function.cpp" />
+    <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="Level1.cpp" />
     <ClCompile Include="Level2.cpp" />
     <ClCompile Include="Level3.cpp" />
@@ -108,20 +112,28 @@ xcopy "$(SolutionDir)Extern\AlphaEngine_V3.08\lib\Alpha_Engine.dll" "$(OutDir)" 
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="GameStateManager.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="Tiles.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BinaryMap.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="function.hpp" />
     <ClInclude Include="GameStateList.h" />
     <ClInclude Include="GameStateManager.h" />
+    <ClInclude Include="Globals.h" />
+    <ClInclude Include="Graphics.h" />
+    <ClInclude Include="Image.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Level3.h" />
     <ClInclude Include="Level2.h" />
     <ClInclude Include="Level1.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Tiles.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
