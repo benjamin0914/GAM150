@@ -10,10 +10,6 @@ AEVec2 AEVec2Set(const f32 x, const f32 y);
 class Tiles
 {
 public:
-	// Reference to a vector, containing a vector of Tiles*
-	using TileMgr = std::vector<std::vector<Tiles>*>&;
-	
-public:
 
 	Tiles(AEGfxTexture*, const f32 width, const f32 height);
 	AEVec2 spawnPos;
