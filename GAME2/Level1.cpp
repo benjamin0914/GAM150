@@ -19,7 +19,6 @@ AEGfxTexture* pTimerTex;
 
 AEGfxTexture* man;
 
-AEGfxVertexList* pMeshLine;
 AEGfxVertexList* pMeshBox;
 AEGfxVertexList* pMeshRect;
 
@@ -27,15 +26,6 @@ AEGfxVertexList* slime;
 //float slimeX, slimeY;
 AEVec2 slime_pos;
 
-
-AEVec2 pt1 = { -250.0f, 200.0f };
-AEVec2 pt2 = { -250.0f, -120.0f };
-AEVec2 pt3 = { -100.0f, -120.0f };
-AEVec2 pt4 = { -100.0f, -20.0f };
-AEVec2 pt5 = { 100.0f, -20.0f };
-AEVec2 pt6 = { 100.0f, -120.0f };
-AEVec2 pt7 = { 250.0f, -120.0f };
-AEVec2 pt8 = { 250.0f, 200.0f };
 
 
 
@@ -238,22 +228,6 @@ void Level1_Load()
 
 
 
-	// Informing the library that we're about to start adding vertices
-	AEGfxMeshStart();
-
-	// This shape has 5 vertices
-	AEGfxVertexAdd(pt1.x, pt1.y, 0xFFFFFFFF, 0.0f, 0.0f);
-	AEGfxVertexAdd(pt2.x, pt2.y, 0xFFFFFFFF, 0.0f, 0.0f);
-	AEGfxVertexAdd(pt3.x, pt3.y, 0xFFFFFFFF, 0.0f, 0.0f);
-	AEGfxVertexAdd(pt4.x, pt4.y, 0xFFFFFFFF, 0.0f, 0.0f);
-	AEGfxVertexAdd(pt5.x, pt5.y, 0xFFFFFFFF, 0.0f, 0.0f);
-	AEGfxVertexAdd(pt6.x, pt6.y, 0xFFFFFFFF, 0.0f, 0.0f);
-	AEGfxVertexAdd(pt7.x, pt7.y, 0xFFFFFFFF, 0.0f, 0.0f);
-	AEGfxVertexAdd(pt8.x, pt8.y, 0xFFFFFFFF, 0.0f, 0.0f);
-
-
-	pMeshLine = AEGfxMeshEnd();
-	AE_ASSERT_MESG(pMeshLine, "Failed to create line mesh!!");
 
 
 
@@ -377,16 +351,7 @@ void Level1_Initialize()
 
 
 
-	/*
-	AEVec2Set(&pt1, -250.f, 200.0f);
-	AEVec2Set(&pt2, -250.f, 170.0f);
-	AEVec2Set(&pt3, -100.f, -120.0f);
-	AEVec2Set(&pt4, -100.f, -20.0f);
-	AEVec2Set(&pt5, 100.f, -20.0f);
-	AEVec2Set(&pt6, 100.f, -120.0f);
-	AEVec2Set(&pt7, 250.0f, -120.0f);
-	AEVec2Set(&pt8, 250.f, 200.0f);
-	*/
+	
 
 	slime_pos.x = 110.0f;
 	slime_pos.y = -130.0f;
@@ -436,25 +401,21 @@ void Level1_Update()
 	if (AEInputCheckCurr(AEVK_W) )
 	{
 		 obj1.y += 10.0f;
-		
-		//obj1Y += 130.0f;
+
 	}	if (AEInputCheckCurr(AEVK_D))
 	{
 		obj1.x += 10.0f;
 
-		//obj1Y += 130.0f;
 	}
 	if (AEInputCheckCurr(AEVK_A))
 	{
 		obj1.x -= 10.0f;
 
-		//obj1Y += 130.0f;
 	}
 	if (AEInputCheckCurr(AEVK_S))
 	{
 		obj1.y -= 10.0f;
 
-		//obj1Y += 130.0f;
 	}
 	/*
 	// Movement for left & right start
@@ -470,57 +431,7 @@ void Level1_Update()
 	if (AEInputCheckCurr(AEVK_D))
 	{
 		movement_right = true;
-	}
-	// Movement for left & right start
-
-
-	//jumping mechanics
-	if (true == jump)
-	{
-
-		jump_timer += static_cast<float>(AEFrameRateControllerGetFrameTime());
-
-		if (jump_timer < duration)
-		{
-			obj1.y = EaseOutCubic(obj1Y_min, obj1Y_max, jump_timer / duration);
-			//only part needed for jumping, gravity takes care of the rest
-			//while not jumping && not on platform THEN gravity starts
-		}
-		/*else if (jump_timer < duration)
-		{
-			obj1.y = EaseOutCubic(obj1Y_max, obj1Y_min, jump_timer / duration);
-		}
-		else if (jump_timer >= duration)
-		{
-			jump_timer = 0.0f;
-			jump = false;
-		}
-	}
-
-	//std::cout << AECalcDistRectToRect(&obj1, 60.f, 60.f, &plf1, 180.f, 60.f, nullptr);
-	//gravity mechanics //always start with higher platforms
-	if ((AECalcDistPointToLineSeg(&obj1, &pt4, &pt5) >= 1.0f) && (obj1.x >= pt4.x) && (obj1.x <= pt5.x) && (obj1.y > pt4.y))
-	{
-		obj1.y -= 2.0f;
-		falling = true;
-	}
-	else if ((AECalcDistPointToLineSeg(&obj1, &pt2, &pt3) >= 1.0f) && (obj1.x >= pt2.x) && (obj1.x <= pt3.x) && (obj1.y > pt2.y))
-	{
-		obj1.y -= 2.0f;
-		falling = true;
-	}
-	else if ((AECalcDistPointToLineSeg(&obj1, &pt6, &pt7) >= 1.0f) && (obj1.x >= pt6.x) && (obj1.x <= pt7.x) && (obj1.y > pt6.y))
-	{
-		obj1.y -= 2.0f;
-		falling = true;
-	}
-	else
-	{
-		falling = false;
-	}
-
-
-	*/
+	}*/
 
 
 
@@ -914,8 +825,7 @@ void Level1_Unload()
 	AEGfxTextureUnload(hole_none);
 
 
-	
-	AEGfxMeshFree(pMeshLine);
+
 	AEGfxMeshFree(pMeshBox);
 	AEGfxMeshFree(pMeshRect);
 
