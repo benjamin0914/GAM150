@@ -340,7 +340,7 @@ void Level1_Initialize()
 			}
 			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::SLIME))
 			{
-				//NOT WORKING YET 
+				//works but only 1 slime 
 				slime_pos.x = (j * grid_width) - (grid_width * 3.5f);
 				slime_pos.y = -(i * grid_height) + (grid_height * 4.28f);
 
@@ -353,8 +353,8 @@ void Level1_Initialize()
 
 	
 
-	slime_pos.x = 110.0f;
-	slime_pos.y = -130.0f;
+	//slime_pos.x = 110.0f;
+	//slime_pos.y = -130.0f;
 
 	jump_timer = 0.0f;
 

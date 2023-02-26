@@ -20,7 +20,7 @@ TileType& operator++(TileType& rhs) {
 }
 Tiles::Tiles(AEGfxTexture* filepath, const f32 width, const f32 height) 
 {
-	type = TileType::Black ;
+	type = TileType::Black;
 	spawnPos = { 0, 0 };
 }
 
