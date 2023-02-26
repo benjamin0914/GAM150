@@ -373,7 +373,6 @@ void Level1_Initialize()
 			}
 		}
 	}
-	tileManager.push_back(&tilemap);
 
 
 
