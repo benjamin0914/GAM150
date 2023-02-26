@@ -8,20 +8,13 @@
 
 static AEGfxTexture* tileTex[static_cast<int>(TileType::Max)]{ nullptr };
 
-//Overloaded alpha eng func move to util.cpp in future - shaq
-AEVec2 AEVec2Set(const f32 x, const f32 y)
-{
-	return AEVec2{ x, y };
-}
-//overload ++ operator to use with Tiletype type - shaq
-TileType& operator++(TileType& rhs) {
-	rhs = static_cast<TileType>((static_cast<int>(rhs) + 1));
-	return rhs;
-}
-Tiles::Tiles(AEGfxTexture* filepath, const f32 width, const f32 height) 
+
+
+Tiles::Tiles() //default ctor
 {
 	type = TileType::Black;
 	spawnPos = { 0, 0 };
+	
 }
 
 void Tiles::LoadTex() {
@@ -47,11 +40,10 @@ void Tiles::LoadTex() {
 
 void Tiles::AddTile(std::vector<Tiles>& tile, TileType type, const f32 width, const f32 height, AEVec2 pos) {
 	AEGfxTexture* temp = tileTex[static_cast<int>(type)];
-	float Height = height;
-	tile.push_back(Tiles(temp, width, Height));
-	Tiles& Tile = tile.back();
-	Tile.type = type;
-	Tile.spawnPos = AEVec2Set(pos.x + width / 2.0f, pos.y + height / 2.0f - Height / 2.0f);
+	tile.push_back(Tiles());
+	Tiles &newTile = tile.back();
+	newTile.type = type;
+	newTile.spawnPos = AEVec2Set(pos.x + width / 2.0f, pos.y + height / 2.0f - height / 2.0f);
 }
 
 
@@ -88,4 +80,13 @@ void Tiles::Unload()
 		AEGfxTextureUnload(tileTex[i]);
 	}
 
+}
+AEVec2 AEVec2Set(const f32 x, const f32 y)
+{
+	return AEVec2{ x, y };
+}
+//overload ++ operator to use with Tiletype type - shaq
+TileType& operator++(TileType& rhs) {
+	rhs = static_cast<TileType>((static_cast<int>(rhs) + 1));
+	return rhs;
 }

@@ -11,7 +11,7 @@ class Tiles
 {
 public:
 
-	Tiles(AEGfxTexture*, const f32 width, const f32 height);
+	Tiles();
 	AEVec2 spawnPos;
 	TileType type;
 	void Render(int width, int height);
