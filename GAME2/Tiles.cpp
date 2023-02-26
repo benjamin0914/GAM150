@@ -39,7 +39,6 @@ void Tiles::LoadTex() {
 }
 
 void Tiles::AddTile(std::vector<Tiles>& tile, TileType type, const f32 width, const f32 height, AEVec2 pos) {
-	AEGfxTexture* temp = tileTex[static_cast<int>(type)];
 	tile.push_back(Tiles());
 	Tiles &newTile = tile.back();
 	newTile.type = type;
