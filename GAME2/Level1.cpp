@@ -552,7 +552,7 @@ void Level1_Draw()
 	
 	for (size_t i = 0; i < tilemap.size(); ++i)
 	{
-		tilemap[i].Render();
+		tilemap[i].Render(Map_Width,Map_Height);
 	}
 
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);

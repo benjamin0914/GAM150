@@ -12,14 +12,13 @@ class Tiles
 public:
 	// Reference to a vector, containing a vector of Tiles*
 	using TileMgr = std::vector<std::vector<Tiles>*>&;
-
-private:
-	TileType type;
+	
 public:
+
 	Tiles(AEGfxTexture*, const f32 width, const f32 height);
 	AEVec2 spawnPos;
-	short ID;
-	void Render(void);
+	TileType type;
+	void Render(int width, int height);
 	static void AddTile(std::vector<Tiles>& tile, TileType type, const f32 width, const f32 height, AEVec2 pos);
 	static void Unload(void);
 	static void LoadTex(void);
