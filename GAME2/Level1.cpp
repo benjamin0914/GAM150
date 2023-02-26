@@ -42,9 +42,6 @@ float jump_timer;
 float const duration = 1.0f; //duration it takes to jump upwards
 
 AEVec2 obj1;
-AEVec2 plf1;
-AEVec2 plf2;
-AEVec2 plf3;
 
 
 
@@ -358,10 +355,8 @@ void Level1_Initialize()
 
 	jump_timer = 0.0f;
 
-	//obj1 = { 0.f, 0.f };
-	plf1 = { 0.f, -80.f };
-	plf2 = { -180.f, -180.f };
-	plf3 = { 180.f, -180.f };
+	
+	
 
 	jump = { false };
 	falling = { false };
@@ -574,74 +569,6 @@ void Level1_Draw()
 	AEGfxMeshDraw(Mesh::Rect, AE_GFX_MDM_TRIANGLES);
 
 
-	/// <Draw top platform start>
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	// Set position
-	AEGfxSetPosition(0.0f, 0.0f); //minus 20 y-axis for every platform position
-	// No tint
-	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Floor texture
-	AEGfxTextureSet(floorTex, 0, 0);
-
-	scale = { 0 };
-	AEMtx33Scale(&scale, 180.f, 60.f);
-	rotate = { 0 };
-	AEMtx33Rot(&rotate, PI * 2.f);
-	translate = { 0 };
-	AEMtx33Trans(&translate, plf1.x, plf1.y);
-	transform = { 0 };
-	AEMtx33Concat(&transform, &rotate, &scale);
-	AEMtx33Concat(&transform, &translate, &transform);
-	AEGfxSetTransform(transform.m);
-	AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
-	/// <Draw top platform end>
-
-
-	/// <Draw left platform start>
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	// Set position
-	AEGfxSetPosition(-180.0f, -180.0f);
-	// No tint
-	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Floor texture
-	AEGfxTextureSet(floorTex, 0, 0);
-	scale = { 0 };
-	AEMtx33Scale(&scale, 180.f, 60.f);
-	rotate = { 0 };
-	AEMtx33Rot(&rotate, 0);
-	translate = { 0 };
-	AEMtx33Trans(&translate, -180.f, -180.f);
-	transform = { 0 };
-	AEMtx33Concat(&transform, &rotate, &scale);
-	AEMtx33Concat(&transform, &translate, &transform);
-	AEGfxSetTransform(transform.m);
-	AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
-	/// <Draw left platform end>
-
-
-
-	/// <Draw right platform start>
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	// Set position
-	AEGfxSetPosition(180.0f, -180.0f);
-	// No tint
-	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Floor texture
-	AEGfxTextureSet(floorTex, 0, 0);
-	scale = { 0 };
-	AEMtx33Scale(&scale, 180.f, 60.f);
-	rotate = { 0 };
-	AEMtx33Rot(&rotate, PI * 2.f);
-	translate = { 0 };
-	AEMtx33Trans(&translate, 180.f, -180.f);
-	transform = { 0 };
-	AEMtx33Concat(&transform, &rotate, &scale);
-	AEMtx33Concat(&transform, &translate, &transform);
-	AEGfxSetTransform(transform.m);
-	//AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
-	/// <Draw right platform end>
-
-
 
 
 
@@ -673,7 +600,7 @@ void Level1_Draw()
 	/// <Draw Slime end>
 	
 
-	/// <Draw left platform start>
+	/// <Draw light circle start>
 	static f32 elapsed = 0;
 	elapsed += g_dt;
 	AEGfxSetTransparency(1.0f);
