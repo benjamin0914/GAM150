@@ -1,5 +1,4 @@
 #include "Tiles.h"
-#include "Image.h"
 #include "GameStateManager.h"
 #include "Globals.h"
 
@@ -20,7 +19,6 @@ TileType& operator++(TileType& rhs) {
 	return rhs;
 }
 Tiles::Tiles(AEGfxTexture* filepath, const f32 width, const f32 height) : 
-	image(filepath, Mesh::Rect, width, height), 
 	ID{ 0 }, 
 	type{ TileType::Black }, 
 	spawnPos{ 0, 0 }
@@ -28,20 +26,31 @@ Tiles::Tiles(AEGfxTexture* filepath, const f32 width, const f32 height) :
 	
 }
 void Tiles::Render() {
-		image.Draw_Texture(255.0f);
+	AEMtx33 transformMtx;
+	static f32 HalfWinHeight, HalfWinWindow;
+	HalfWinHeight = AEGetWindowHeight() / 2.0f;
+	HalfWinWindow = AEGetWindowWidth() / 2.0f;
+	AEMtx33	trans, rot, scale;
+	AEMtx33Scale(&scale, 100,70);
+	AEMtx33Rot(&rot, AEDegToRad(0));
+	AEMtx33Trans(&trans, -HalfWinWindow + Tiles::spawnPos.x, HalfWinHeight - Tiles::spawnPos.y);
+	AEMtx33 temp;
+	AEMtx33Concat(&temp, &rot, &scale);
+	AEMtx33Concat(&transformMtx, &trans, &temp);
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+	AEGfxTextureSet(tileTex[1], 0, 0);
+	AEGfxSetTransform(transformMtx.m);
+	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
+	AEGfxMeshDraw(Mesh::Rect, AE_GFX_MDM_TRIANGLES);
+	
 }
 void Tiles::AddTile(std::vector<Tiles>& tile, TileType type, const f32 width, const f32 height, AEVec2 pos) {
 	AEGfxTexture* temp = tileTex[static_cast<int>(type)];
 	float Height = height;
-
 	tile.push_back(Tiles(temp, width, Height));
 	Tiles& Tile = tile.back();
 	Tile.type = type;
-
-
-
-	Tile.spawnPos = Tile.image.pos;
-	Tile.image.pos = AEVec2Set(pos.x + Tile.image.width / 2.0f, pos.y + height / 2.0f - Height / 2.0f);
+	Tile.spawnPos = AEVec2Set(pos.x + width / 2.0f, pos.y + height / 2.0f - Height / 2.0f);
 }
 
 void Tiles::LoadTex() {

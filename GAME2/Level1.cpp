@@ -8,7 +8,7 @@
 #include "Globals.h"
 #include "BinaryMap.h"
 #include "Tiles.h"
-#include "Player.h"
+
 
 AEGfxTexture* floorTex; // Pointer to floor image texture
 AEGfxTexture* hole_big;
@@ -17,6 +17,7 @@ AEGfxTexture* hole_none;
 AEGfxTexture* slimeTexture;
 AEGfxTexture* pTimerTex;
 
+AEGfxTexture* man;
 
 AEGfxVertexList* pMeshLine;
 AEGfxVertexList* pMeshBox;
@@ -64,7 +65,7 @@ std::vector<Tiles> tilemap;
 std::vector <std::vector <Tiles>*> tileManager;
 extern AEVec2 EntitySizeArray[static_cast<int>(EntitySizes::MAX)];
 
-Player man;
+
 
 
 
@@ -195,7 +196,7 @@ void Level1_Load()
 		next = GS_MAINMENU;
 	}
 	Tiles::LoadTex();
-	Player::LoadTex();
+	
 	// zero the game object array
 	memset(sGameObjList, 0, sizeof(GameObj) * GAME_OBJ_NUM_MAX);
 	// No game objects (shapes) at this point
@@ -310,6 +311,7 @@ void Level1_Load()
 	hole_big = AEGfxTextureLoad("Assets/hole_big.png");
 	hole_small = AEGfxTextureLoad("Assets/hole_small.png");
 	hole_none = AEGfxTextureLoad("Assets/hole_none.png");
+	man =  AEGfxTextureLoad("Assets/player_cube.png");
 	AE_ASSERT_MESG(floorTex, "Failed to create texture1!!");
 
 
@@ -358,12 +360,7 @@ void Level1_Initialize()
 			}
 			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::PLAYER))
 			{
-				Player::CreatePlayer(man, AEVec2Set(j * grid_width, i * grid_height),
-					//Supposed to set the player size, but no nid for now
-					EntitySizeArray[static_cast<int>(EntitySizes::PLAYER)].x, EntitySizeArray[static_cast<int>(EntitySizes::PLAYER)].y);
-
-				//TO DO: MOVE OBJ1 TO PLAYER CLASS
-				//HOLY SHIT HARDCODED AS FUCK SPAWN FIX IN FUTURE
+				//Supposed to set the player size, but no nid for now
 				obj1.x = (j * grid_width) - (grid_width * 3.5f);
 				obj1.y = -(i * grid_height) + (grid_height * 4.28f);
 			}
@@ -417,8 +414,8 @@ void Level1_Update()
 
 			///////////////////
 		// Game loop update
-		//HERE IS WHERE U UPDATE PLAYER POS
-	man.SetPos(obj1);
+
+
 		// Press escape button to quit
 	if (AEInputCheckTriggered(AEVK_ESCAPE)) next = GS_QUIT;
 
@@ -431,22 +428,35 @@ void Level1_Update()
 	else if (AEInputCheckCurr(AEVK_3))
 		AEGfxSetBlendMode(AE_GFX_BM_ADD);
 
+	AEGfxSetCamPosition(obj1.x, obj1.y);
 
 
+// Object 1 Control
 
-/*// Object 1 Control
-	if (AEInputCheckTriggered(AEVK_SPACE) && (false == falling) && (false == jump))
+	if (AEInputCheckCurr(AEVK_W) )
 	{
-		obj1Y_min = obj1.y;
-		obj1Y_max = obj1.y + 130.0f;
-		jump = true;
+		 obj1.y += 10.0f;
+		
+		//obj1Y += 130.0f;
+	}	if (AEInputCheckCurr(AEVK_D))
+	{
+		obj1.x += 10.0f;
+
 		//obj1Y += 130.0f;
 	}
-	else if (AEInputCheckCurr(AEVK_DOWN))
-		obj1.y -= 2.0f;
-	
+	if (AEInputCheckCurr(AEVK_A))
+	{
+		obj1.x -= 10.0f;
 
+		//obj1Y += 130.0f;
+	}
+	if (AEInputCheckCurr(AEVK_S))
+	{
+		obj1.y -= 10.0f;
 
+		//obj1Y += 130.0f;
+	}
+	/*
 	// Movement for left & right start
 	if (!AEInputCheckCurr(AEVK_A) && !AEInputCheckCurr(AEVK_D))
 	{
@@ -634,7 +644,25 @@ void Level1_Draw()
 		tilemap[i].Render();
 	}
 
-	man.Render();
+	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
+	// Set position
+	AEGfxSetPosition(0.0f, 0.0f); //minus 20 y-axis for every platform position
+	// No tint
+	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
+	// Floor texture
+	AEGfxTextureSet(man, 0, 0);
+
+	scale = { 0 };
+	AEMtx33Scale(&scale, 50.f, 50.f);
+	rotate = { 0 };
+	AEMtx33Rot(&rotate, PI * 2.f);
+	translate = { 0 };
+	AEMtx33Trans(&translate, obj1.x, obj1.y);
+	transform = { 0 };
+	AEMtx33Concat(&transform, &rotate, &scale);
+	AEMtx33Concat(&transform, &translate, &transform);
+	AEGfxSetTransform(transform.m);
+	AEGfxMeshDraw(Mesh::Rect, AE_GFX_MDM_TRIANGLES);
 	/// <Draw top platform start>
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	// Set position

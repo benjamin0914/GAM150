@@ -1,7 +1,7 @@
 #pragma once
 #include "AEEngine.h"
 #include <vector>
-#include "Image.h"
+
 
 
 enum class TileType {	Black = 0, Dirt, Max };
@@ -17,7 +17,6 @@ private:
 	TileType type;
 public:
 	Tiles(AEGfxTexture*, const f32 width, const f32 height);
-	Image image;
 	AEVec2 spawnPos;
 	short ID;
 	void Render(void);

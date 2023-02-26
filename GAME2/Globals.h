@@ -30,4 +30,3 @@ namespace FILEP {
 
 	
 }
-extern float player_objtexX;
