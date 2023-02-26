@@ -38,7 +38,12 @@ void Tiles::Render() {
 	AEMtx33Concat(&temp, &rot, &scale);
 	AEMtx33Concat(&transformMtx, &trans, &temp);
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	AEGfxTextureSet(tileTex[1], 0, 0);
+	if (Tiles::type == TileType::Black) {
+		AEGfxTextureSet(tileTex[0], 0, 0);
+	}
+	else if (Tiles::type == TileType::Dirt) {
+		AEGfxTextureSet(tileTex[1], 0, 0);
+	}
 	AEGfxSetTransform(transformMtx.m);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	AEGfxMeshDraw(Mesh::Rect, AE_GFX_MDM_TRIANGLES);
@@ -58,10 +63,10 @@ void Tiles::LoadTex() {
 		const char* pTex{ nullptr };
 		switch (i) {
 		case TileType::Black:
-			pTex = FILEP::TILE::Black;
+			pTex = "./Assets/Tiles/Black_Tile.png";
 			break;
 		case TileType::Dirt:
-			pTex = FILEP::TILE::Dirt;
+			pTex = "./Assets/Tiles/Dirt_Tile.png";
 			break;
 		default:
 			throw "invalid tile type!";
