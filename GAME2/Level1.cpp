@@ -52,7 +52,7 @@ AEVec2 plf3;
 AEVec2 test = { 0.f, 1.f };
 
 std::vector<Tiles> tilemap;
-std::vector <std::vector <Tiles>*> tileManager;
+
 extern AEVec2 EntitySizeArray[static_cast<int>(EntitySizes::MAX)];
 
 
@@ -347,7 +347,7 @@ void Level1_Initialize()
 			}
 		}
 	}
-	tileManager.push_back(&tilemap);
+
 
 
 
