@@ -52,7 +52,7 @@ AEVec2 plf3;
 AEVec2 test = { 0.f, 1.f };
 
 std::vector<Tiles> tilemap;
-std::vector <std::vector <Tiles>*> tileManager;
+
 extern AEVec2 EntitySizeArray[static_cast<int>(EntitySizes::MAX)];
 
 
@@ -340,21 +340,21 @@ void Level1_Initialize()
 			}
 			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::SLIME))
 			{
-				//NOT WORKING YET 
+				//works but only 1 slime 
 				slime_pos.x = (j * grid_width) - (grid_width * 3.5f);
 				slime_pos.y = -(i * grid_height) + (grid_height * 4.28f);
 
 			}
 		}
 	}
-	tileManager.push_back(&tilemap);
+
 
 
 
 	
 
-	slime_pos.x = 110.0f;
-	slime_pos.y = -130.0f;
+	//slime_pos.x = 110.0f;
+	//slime_pos.y = -130.0f;
 
 	jump_timer = 0.0f;
 
@@ -550,7 +550,7 @@ void Level1_Draw()
 	
 	for (size_t i = 0; i < tilemap.size(); ++i)
 	{
-		tilemap[i].Render();
+		tilemap[i].Render(Map_Width,Map_Height);
 	}
 
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
