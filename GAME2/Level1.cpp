@@ -335,8 +335,8 @@ void Level1_Initialize()
 			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::PLAYER))
 			{
 				//Supposed to set the player size, but no nid for now
-				obj1.x = (j * grid_width) - (grid_width * 3.5f);
-				obj1.y = -(i * grid_height) + (grid_height * 4.28f);
+				spPlayer->posCurr.x = (j * grid_width) - (grid_width * 3.5f);
+				spPlayer->posCurr.y = -(i * grid_height) + (grid_height * 4.28f);
 			}
 			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::SLIME))
 			{
@@ -393,30 +393,37 @@ void Level1_Update()
 	else if (AEInputCheckCurr(AEVK_3))
 		AEGfxSetBlendMode(AE_GFX_BM_ADD);
 
-	AEGfxSetCamPosition(obj1.x, obj1.y);
+	AEGfxSetCamPosition(spPlayer->posCurr.x, spPlayer->posCurr.y);
 
 
 // Object 1 Control
 
-	if (AEInputCheckCurr(AEVK_W) )
+	/*if (AEInputCheckCurr(AEVK_W))
 	{
 		 obj1.y += 10.0f;
 
-	}	if (AEInputCheckCurr(AEVK_D))
-	{
-		obj1.x += 10.0f;
-
-	}
-	if (AEInputCheckCurr(AEVK_A))
-	{
-		obj1.x -= 10.0f;
-
-	}
+	}	
 	if (AEInputCheckCurr(AEVK_S))
 	{
 		obj1.y -= 10.0f;
 
+	}*/
+
+
+	if (AEInputCheckCurr(AEVK_A))
+	{
+		spPlayer->velCurr.x = -80.0f;
+
 	}
+	else if (AEInputCheckCurr(AEVK_D))
+	{
+		spPlayer->velCurr.x = 80.0f;
+	}
+	else
+	{
+		spPlayer->velCurr.x = 0.f;
+	}
+	
 	/*
 	// Movement for left & right start
 	if (!AEInputCheckCurr(AEVK_A) && !AEInputCheckCurr(AEVK_D))
@@ -451,23 +458,13 @@ void Level1_Update()
 	////////////////////////
 
 
-	// Time-based movement for player
-	if (true == movement_left)
-	{
-		// Make sure to check for left wall before actually moving
-		spPlayer->posCurr.x -= PLAYER_MOVEMENT * g_dt;
-	}
-	if (true == movement_right)
-	{
-		// Make sure to check for right wall before actually moving
-		spPlayer->posCurr.x += PLAYER_MOVEMENT * g_dt;
-	}
 
+	// Player gravity
+	spPlayer->velCurr.y += -160.f * g_dt;
 
-	// Constant update of Player position from its velocity
-	AEVec2 playernewvel;
-	AEVec2Scale(&playernewvel, &spPlayer->velCurr, g_dt);
-	AEVec2Add(&spPlayer->posCurr, &spPlayer->posCurr, &playernewvel);
+	// Player movement update
+	spPlayer->posCurr.x += spPlayer->velCurr.x * g_dt;
+	spPlayer->posCurr.y += spPlayer->velCurr.y * g_dt;
 
 
 	// ======================================================
@@ -493,6 +490,7 @@ void Level1_Update()
 			AEVec2 newvel;
 			AEVec2Scale(&newvel, &sGameObjInstList[i].velCurr, g_dt);
 			AEVec2Add(&sGameObjInstList[i].posCurr, &sGameObjInstList[i].posCurr, &newvel);
+
 		}
 	}
 
@@ -568,12 +566,14 @@ void Level1_Draw()
 	rotate = { 0 };
 	AEMtx33Rot(&rotate, PI * 2.f);
 	translate = { 0 };
-	AEMtx33Trans(&translate, obj1.x, obj1.y);
+	AEMtx33Trans(&translate, spPlayer->posCurr.x, spPlayer->posCurr.y);
 	transform = { 0 };
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxMeshDraw(Mesh::Rect, AE_GFX_MDM_TRIANGLES);
+
+
 	/// <Draw top platform start>
 	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
 	// Set position
@@ -638,7 +638,7 @@ void Level1_Draw()
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
-	AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
+	//AEGfxMeshDraw(pMeshBox, AE_GFX_MDM_TRIANGLES);
 	/// <Draw right platform end>
 
 
@@ -718,13 +718,14 @@ void Level1_Draw()
 	rotate = { 0 };
 	AEMtx33Rot(&rotate, 0);
 	translate = { 0 };
-	AEMtx33Trans(&translate, obj1.x, obj1.y);
+	AEMtx33Trans(&translate, spPlayer->posCurr.x, spPlayer->posCurr.y);
 	transform = { 0 };
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);
 	AEGfxSetTransform(transform.m);
 	AEGfxSetBlendMode(AE_GFX_BM_BLEND);
 	AEGfxMeshDraw(pMeshRect, AE_GFX_MDM_TRIANGLES);
+	// Light circle mesh
 
 
 
@@ -744,7 +745,7 @@ void Level1_Draw()
 	
 	AEMtx33Rot(&rotate, PI);
 
-	AEMtx33Trans(&translate, obj1.x, obj1.y+250);
+	AEMtx33Trans(&translate, spPlayer->posCurr.x, spPlayer->posCurr.y +250);
 
 	AEMtx33Concat(&transform, &rotate, &scale);
 	AEMtx33Concat(&transform, &translate, &transform);

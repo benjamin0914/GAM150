@@ -30,6 +30,11 @@ bool CollisionIntersection_RectRect(const AABB& aabb1, const AEVec2& vel1,
 		dlast.x = aabb1.max.x - aabb2.min.x;
 		dlast.y = aabb1.max.y - aabb2.min.y;
 
+		if ((0.f == vel_relative_b.x) && (0.f == vel_relative_b.y))
+		{
+			return false;
+		}
+
 		if (vel_relative_b.x < 0)
 		{
 			// Case 1 x
