@@ -1,7 +1,7 @@
 #include "Tiles.h"
 #include "GameStateManager.h"
 #include "Globals.h"
-
+#include "Enemy.h"
 
 #include <iostream>
 #include <array>

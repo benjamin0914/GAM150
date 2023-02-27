@@ -109,7 +109,7 @@ void Level3_Initialize()
 void Level3_Update()
 {
 	AEGfxSetCamPosition(player.min.x, player.min.y);
-	updatePos(enemy.min.x, enemy.min.y);
+	Enemy::updatePos(enemy.min.x, enemy.min.y);
 
 	enemyvel.x += enemy.min.x;
 

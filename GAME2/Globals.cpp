@@ -11,5 +11,6 @@ namespace FILEP {
 	namespace TILE {
 		const char* Black = "./Assets/Tiles/Black_Tile.png";
 		const char* Dirt = "./Assets/Tiles/Dirt_Tile.png";
+		const char* Slime = "./Assets/Tiles/Enemy.png";
 	}
 }

@@ -49,6 +49,7 @@ AEVec2 obj1;
 AEVec2 test = { 0.f, 1.f };
 
 std::vector<Tiles> tilemap;
+std::vector<Enemy> enemyList;
 
 extern AEVec2 EntitySizeArray[static_cast<int>(EntitySizes::MAX)];
 
@@ -188,6 +189,7 @@ void Level1_Load()
 		next = GS_MAINMENU;
 	}
 	Tiles::LoadTex();
+	Enemy::LoadTex();
 	
 	// zero the game object array
 	memset(sGameObjList, 0, sizeof(GameObj) * GAME_OBJ_NUM_MAX);
@@ -345,9 +347,10 @@ void Level1_Initialize()
 			}
 			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::SLIME))
 			{
+				Enemy::Add(enemyList, EnemyType::slime, grid_width, grid_height, AEVec2Set(j * grid_width, i * grid_height));
 				//works but only 1 slime 
-				slime_pos.x = (j * grid_width) - (grid_width * 3.5f);
-				slime_pos.y = -(i * grid_height) + (grid_height * 4.28f);
+				//slime_pos.x = (j * grid_width) - (grid_width * 3.5f);
+				//slime_pos.y = -(i * grid_height) + (grid_height * 4.28f);
 
 			}
 		}
@@ -457,7 +460,9 @@ void Level1_Update()
 
 
 
-	updatePos(slime_pos.x, slime_pos.y);
+	//for (size_t i = 0; i < enemyList.size(); ++i) {
+	//	Enemy::EnemyState(&enemyList[i]);
+	//}
 	//
 	// AEGfxSetCamPosition(obj1.x, obj1.y);
 	// Game loop update end
@@ -500,14 +505,14 @@ void Level1_Update()
 	spPlayer->gridCollisionFlag = CheckInstanceBinaryMapCollision(spPlayer->posCurr.x, spPlayer->posCurr.y, 5.0f,5.0f);
 	//std::cout<<spPlayer->posCurr.x;
 	//std::cout << spPlayer->posCurr.y;
-		if (COLLISION_BOTTOM && spPlayer->gridCollisionFlag)
+		if (COLLISION_BOTTOM & spPlayer->gridCollisionFlag)
 		{
 			std::cout << "collided bot";
-			//SnapToCell(&spPlayer->posCurr.y);
-			//spPlayer->velCurr.y = 0.f;
+			SnapToCell(&spPlayer->posCurr.y);
+			spPlayer->velCurr.y = 0.f;
 		}
 
-		if (COLLISION_TOP && spPlayer->gridCollisionFlag)
+		if (COLLISION_TOP & spPlayer->gridCollisionFlag)
 		{
 			std::cout << "collided top";
 			//std::cout << "TestTop";
@@ -515,7 +520,7 @@ void Level1_Update()
 			//spPlayer->velCurr.y = 0.f;
 		}
 
-		if (COLLISION_LEFT && spPlayer->gridCollisionFlag)
+		if (COLLISION_LEFT & spPlayer->gridCollisionFlag)
 		{
 			std::cout << "collided left";
 			//std::cout << "TestLeft";
@@ -523,7 +528,7 @@ void Level1_Update()
 			//spPlayer->velCurr.x = 0.f;
 		}
 
-		if (COLLISION_RIGHT && spPlayer->gridCollisionFlag)
+		if (COLLISION_RIGHT & spPlayer->gridCollisionFlag)
 		{
 			std::cout << "collided right";
 			//std::cout << "TestRight";
@@ -592,7 +597,10 @@ void Level1_Draw()
 
 
 
-
+	for (size_t i = 0; i < enemyList.size(); ++i)
+	{
+		enemyList[i].Render(Map_Width, Map_Height);
+	}
 
 
 

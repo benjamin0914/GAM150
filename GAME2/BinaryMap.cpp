@@ -114,7 +114,7 @@ int ImportMapDataFromFile(const char* FileName)
 void  SnapToCell(float* Coordinate)
 {
 	UNREFERENCED_PARAMETER(Coordinate);
-	*Coordinate = static_cast<int> (*Coordinate) + 50.0f;
+	*Coordinate = static_cast<int> (*Coordinate) + 5.0f;
 
 }
 int CheckInstanceBinaryMapCollision(float PosX, float PosY, float scaleX, float scaleY)
