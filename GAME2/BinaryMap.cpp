@@ -111,10 +111,10 @@ int ImportMapDataFromFile(const char* FileName)
 	return 1;
 }
 
-void  SnapToCell(float* Coordinate)
+void  SnapToCell(float* Coordinate,float adjust)
 {
 	UNREFERENCED_PARAMETER(Coordinate);
-	*Coordinate = static_cast<int> (*Coordinate) + 5.0f;
+	*Coordinate = static_cast<int> (*Coordinate) + adjust;
 
 }
 int CheckInstanceBinaryMapCollision(float PosX, float PosY, float scaleX, float scaleY)
@@ -146,19 +146,16 @@ int CheckInstanceBinaryMapCollision(float PosX, float PosY, float scaleX, float 
 	y1 = (PosY + scaleY / 4)/70;	//To go up 1 / 4 of the height
 	x2 = (PosX + scaleX / 2)/100;	//To reach the right side
 	y2 = (PosY - scaleY / 4)/70;	//To go down 1 / 4 of the height
-	x1 = fabs(x1);
-	x2 = fabs(x2);
-	y1 = fabs(y1);
-	y2 = fabs(y2);
+
 
 	if (BinaryCollisionArray[static_cast<int> (y1)][static_cast<int> (x1)] || BinaryCollisionArray[static_cast<int> (y2)][static_cast<int> (x2)]) {
 		flag += COLLISION_RIGHT;
 	}
 
 	x1 = (PosX - scaleX / 4)/100;
-	y1 = (PosY + scaleY / 2)/70;
+	y1 = (PosY + 100 / 2)/70;
 	x2 = (PosX + scaleX / 4)/100;
-	y2 = (PosY + scaleY / 2)/70;
+	y2 = (PosY + 100 / 2)/70;
 	x1 = fabs(x1);
 	x2 = fabs(x2);
 	y1 = fabs(y1);
@@ -168,16 +165,15 @@ int CheckInstanceBinaryMapCollision(float PosX, float PosY, float scaleX, float 
 	}
 
 	x1 = (PosX - scaleX / 4)/100;
-	y1 = (PosY - scaleY / 2)/70;
+	y1 = (PosY - 15 / 2)/70;
 	x2 = (PosX + scaleX / 4)/100;
-	y2 = (PosY - scaleY / 2)/70;
+	y2 = (PosY - 15 / 2)/70;
 	x1 = fabs(x1);
 	x2 = fabs(x2);
 	y1 = fabs(y1);
 	y2 = fabs(y2);
 	if (BinaryCollisionArray[static_cast<int> (y1)][static_cast<int> (x1)] || BinaryCollisionArray[static_cast<int> (y2)][static_cast<int> (x2)]) {
 		flag += COLLISION_BOTTOM;
-		std::cout << "TestBot";
 	}
 
 	//std::cout << BinaryCollisionArray[static_cast<int>(y1)][static_cast<int>(x1)];

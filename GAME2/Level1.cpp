@@ -338,9 +338,7 @@ void Level1_Initialize()
 			}
 			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::PLAYER))
 			{
-				static f32 HalfWinHeight, HalfWinWindow;
-				HalfWinHeight = AEGetWindowHeight() / 2.0f;
-				HalfWinWindow = AEGetWindowWidth() / 2.0f;
+
 				//Supposed to set the player size, but no nid for now
 				spPlayer->posCurr.x = (j * grid_width) - (grid_width );
 				spPlayer->posCurr.y = (i * grid_height) + (grid_height );
@@ -418,20 +416,20 @@ void Level1_Update()
 
 	if (AEInputCheckCurr(AEVK_A))
 	{
-		spPlayer->posCurr.x += -5.0f;
+		spPlayer->velCurr.x = -80.0f;
 
 	}
 	else if (AEInputCheckCurr(AEVK_D))
 	{
-		spPlayer->posCurr.x += 5.0f;
+		spPlayer->velCurr.x = 80.0f;
 	}
 	else if (AEInputCheckCurr(AEVK_W))
 	{
-		spPlayer->posCurr.y += 5.0f;
+		spPlayer->velCurr.y = 1.0f;
 	}
 	else if (AEInputCheckCurr(AEVK_S))
 	{
-		spPlayer->posCurr.y -= 5.0f;
+		spPlayer->velCurr.y -= 1.0f;
 	}
 	/*
 	// Movement for left & right start
@@ -471,11 +469,11 @@ void Level1_Update()
 
 
 	// Player gravity
-	//spPlayer->velCurr.y += -160.f * g_dt;
+	spPlayer->velCurr.y += -160.f * g_dt;
 
 	// Player movement update
-	//spPlayer->posCurr.x += spPlayer->velCurr.x * g_dt;
-	//spPlayer->posCurr.y += spPlayer->velCurr.y * g_dt;
+	spPlayer->posCurr.x += spPlayer->velCurr.x * g_dt;
+	spPlayer->posCurr.y += spPlayer->velCurr.y * g_dt;
 
 
 
@@ -505,10 +503,27 @@ void Level1_Update()
 	spPlayer->gridCollisionFlag = CheckInstanceBinaryMapCollision(spPlayer->posCurr.x, spPlayer->posCurr.y, 5.0f,5.0f);
 	//std::cout<<spPlayer->posCurr.x;
 	//std::cout << spPlayer->posCurr.y;
+	
+
+		if (COLLISION_LEFT & spPlayer->gridCollisionFlag)
+		{
+			std::cout << "collided left";
+			//std::cout << "TestLeft";
+			SnapToCell(&spPlayer->posCurr.x,2.5f);
+			spPlayer->velCurr.x = 0.f;
+		}
+
+		if (COLLISION_RIGHT & spPlayer->gridCollisionFlag)
+		{
+			std::cout << "collided right";
+			//std::cout << "TestRight";
+			SnapToCell(&spPlayer->posCurr.x,-2.5f);
+			spPlayer->velCurr.x = 0.f;
+		}
 		if (COLLISION_BOTTOM & spPlayer->gridCollisionFlag)
 		{
 			std::cout << "collided bot";
-			SnapToCell(&spPlayer->posCurr.y);
+			SnapToCell(&spPlayer->posCurr.y,1.0f);
 			spPlayer->velCurr.y = 0.f;
 		}
 
@@ -516,26 +531,9 @@ void Level1_Update()
 		{
 			std::cout << "collided top";
 			//std::cout << "TestTop";
-			//SnapToCell(&spPlayer->posCurr.y);
-			//spPlayer->velCurr.y = 0.f;
+			SnapToCell(&spPlayer->posCurr.y,-2.5f);
+			spPlayer->velCurr.y = 0.f;
 		}
-
-		if (COLLISION_LEFT & spPlayer->gridCollisionFlag)
-		{
-			std::cout << "collided left";
-			//std::cout << "TestLeft";
-			//SnapToCell(&spPlayer->posCurr.x);
-			//spPlayer->velCurr.x = 0.f;
-		}
-
-		if (COLLISION_RIGHT & spPlayer->gridCollisionFlag)
-		{
-			std::cout << "collided right";
-			//std::cout << "TestRight";
-			//SnapToCell(&spPlayer->posCurr.x);
-			//spPlayer->velCurr.x = 0.f;
-		}
-		
 	
 	
 

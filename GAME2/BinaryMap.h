@@ -27,4 +27,4 @@ extern int Map_Height;
 int		ImportMapDataFromFile(const char* FileName);
 void	FreeMapData(void);
 int CheckInstanceBinaryMapCollision(float PosX, float PosY, float scaleX, float scaleY);
-void SnapToCell(float* Coordinate);
+void SnapToCell(float* Coordinate,float adjust);
