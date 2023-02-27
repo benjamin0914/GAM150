@@ -53,7 +53,11 @@ std::vector<Tiles> tilemap;
 extern AEVec2 EntitySizeArray[static_cast<int>(EntitySizes::MAX)];
 
 
-
+//Collision flags
+const unsigned int	COLLISION_LEFT = 0x00000001;	//0001
+const unsigned int	COLLISION_RIGHT = 0x00000002;	//0010
+const unsigned int	COLLISION_TOP = 0x00000004;	//0100
+const unsigned int	COLLISION_BOTTOM = 0x00000008;	//1000
 
 
 int counter = 0; // Counter to swap textures
@@ -124,6 +128,7 @@ struct GameObjInst
 	AABB				boundingBox;// object bouding box that encapsulates the object
 	AEMtx33				transform;	// object transformation matrix: Each frame, 
 									// calculate the object instance's transformation matrix and save it here
+	int				gridCollisionFlag;
 
 	//void				(*pfUpdate)(void);
 	//void				(*pfDraw)(void);
@@ -331,9 +336,12 @@ void Level1_Initialize()
 			}
 			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::PLAYER))
 			{
+				static f32 HalfWinHeight, HalfWinWindow;
+				HalfWinHeight = AEGetWindowHeight() / 2.0f;
+				HalfWinWindow = AEGetWindowWidth() / 2.0f;
 				//Supposed to set the player size, but no nid for now
-				spPlayer->posCurr.x = (j * grid_width) - (grid_width * 3.5f);
-				spPlayer->posCurr.y = -(i * grid_height) + (grid_height * 4.28f);
+				spPlayer->posCurr.x = (j * grid_width) - (grid_width );
+				spPlayer->posCurr.y = (i * grid_height) + (grid_height );
 			}
 			else if (MapData[i][j] == static_cast<int>(TYPE_OBJECT::SLIME))
 			{
@@ -407,18 +415,21 @@ void Level1_Update()
 
 	if (AEInputCheckCurr(AEVK_A))
 	{
-		spPlayer->velCurr.x = -80.0f;
+		spPlayer->posCurr.x += -5.0f;
 
 	}
 	else if (AEInputCheckCurr(AEVK_D))
 	{
-		spPlayer->velCurr.x = 80.0f;
+		spPlayer->posCurr.x += 5.0f;
 	}
-	else
+	else if (AEInputCheckCurr(AEVK_W))
 	{
-		spPlayer->velCurr.x = 0.f;
+		spPlayer->posCurr.y += 5.0f;
 	}
-	
+	else if (AEInputCheckCurr(AEVK_S))
+	{
+		spPlayer->posCurr.y -= 5.0f;
+	}
 	/*
 	// Movement for left & right start
 	if (!AEInputCheckCurr(AEVK_A) && !AEInputCheckCurr(AEVK_D))
@@ -455,48 +466,17 @@ void Level1_Update()
 
 
 	// Player gravity
-	spPlayer->velCurr.y += -160.f * g_dt;
+	//spPlayer->velCurr.y += -160.f * g_dt;
 
 	// Player movement update
-	spPlayer->posCurr.x += spPlayer->velCurr.x * g_dt;
-	spPlayer->posCurr.y += spPlayer->velCurr.y * g_dt;
+	//spPlayer->posCurr.x += spPlayer->velCurr.x * g_dt;
+	//spPlayer->posCurr.y += spPlayer->velCurr.y * g_dt;
 
 
-	// ======================================================
-	// update physics of all active game object instances
-	//  -- Get the AABB bounding rectangle of every active instance:
-	//		boundingRect_min = -(BOUNDING_RECT_SIZE/2.0f) * instance->scale + instance->pos
-	//		boundingRect_max = +(BOUNDING_RECT_SIZE/2.0f) * instance->scale + instance->pos
-	//
-	//	-- Positions of the instances are updated here with the already computed velocity (above)
-	// ======================================================
-	for (unsigned long i = 0; i < GAME_OBJ_INST_NUM_MAX; i++)
-	{
-		// Check if current instance is used
-		if (sGameObjInstList[i].flag == FLAG_ACTIVE)
-		{
-			// Computes the AABB bounding rectangle of instances
-			sGameObjInstList[i].boundingBox.min.x = -(BOUNDING_RECT_SIZE / 2.f) * sGameObjInstList[i].scale + sGameObjInstList[i].posCurr.x;
-			sGameObjInstList[i].boundingBox.min.y = -(BOUNDING_RECT_SIZE / 2.f) * sGameObjInstList[i].scale + sGameObjInstList[i].posCurr.y;
-			sGameObjInstList[i].boundingBox.max.x = (BOUNDING_RECT_SIZE / 2.f) * sGameObjInstList[i].scale + sGameObjInstList[i].posCurr.x;
-			sGameObjInstList[i].boundingBox.max.y = (BOUNDING_RECT_SIZE / 2.f) * sGameObjInstList[i].scale + sGameObjInstList[i].posCurr.y;
 
-			// Update positions of instances with computed velocity
-			AEVec2 newvel;
-			AEVec2Scale(&newvel, &sGameObjInstList[i].velCurr, g_dt);
-			AEVec2Add(&sGameObjInstList[i].posCurr, &sGameObjInstList[i].posCurr, &newvel);
-
-		}
-	}
 
 	//Check for grid collision
-	for (i = 0; i < GAME_OBJ_INST_NUM_MAX; ++i)
-	{
-		pInst = sGameObjInstList + i;
 
-		// skip non-active object instances
-		if (0 == (pInst->flag & FLAG_ACTIVE))
-			continue;
 
 		/*************
 		Update grid collision flag
@@ -517,33 +497,42 @@ void Level1_Update()
 			Snap to cell on X axis
 			Velocity X = 0
 		*************/
-		pInst->gridCollisionFlag = CheckInstanceBinaryMapCollision(pInst->posCurr.x, pInst->posCurr.y, pInst->scale, pInst->scale);
-
-		if (COLLISION_BOTTOM & pInst->gridCollisionFlag)
+	spPlayer->gridCollisionFlag = CheckInstanceBinaryMapCollision(spPlayer->posCurr.x, spPlayer->posCurr.y, 5.0f,5.0f);
+	//std::cout<<spPlayer->posCurr.x;
+	//std::cout << spPlayer->posCurr.y;
+		if (COLLISION_BOTTOM && spPlayer->gridCollisionFlag)
 		{
-			SnapToCell(&pInst->posCurr.y);
-			pInst->velCurr.y = 0.f;
+			std::cout << "collided bot";
+			//SnapToCell(&spPlayer->posCurr.y);
+			//spPlayer->velCurr.y = 0.f;
 		}
 
-		if (COLLISION_TOP & pInst->gridCollisionFlag)
+		if (COLLISION_TOP && spPlayer->gridCollisionFlag)
 		{
-			SnapToCell(&pInst->posCurr.y);
-			pInst->velCurr.y = 0.f;
+			std::cout << "collided top";
+			//std::cout << "TestTop";
+			//SnapToCell(&spPlayer->posCurr.y);
+			//spPlayer->velCurr.y = 0.f;
 		}
 
-		if (COLLISION_LEFT & pInst->gridCollisionFlag)
+		if (COLLISION_LEFT && spPlayer->gridCollisionFlag)
 		{
-			SnapToCell(&pInst->posCurr.x);
-			pInst->velCurr.x = 0.f;
+			std::cout << "collided left";
+			//std::cout << "TestLeft";
+			//SnapToCell(&spPlayer->posCurr.x);
+			//spPlayer->velCurr.x = 0.f;
 		}
 
-		if (COLLISION_RIGHT & pInst->gridCollisionFlag)
+		if (COLLISION_RIGHT && spPlayer->gridCollisionFlag)
 		{
-			SnapToCell(&pInst->posCurr.x);
-			pInst->velCurr.x = 0.f;
+			std::cout << "collided right";
+			//std::cout << "TestRight";
+			//SnapToCell(&spPlayer->posCurr.x);
+			//spPlayer->velCurr.x = 0.f;
 		}
-	}
-
+		
+	
+	
 
 
 
@@ -567,7 +556,7 @@ void Level1_Update()
 			continue;
 
 		// Compute the scaling matrix
-		AEMtx33Scale(&scale, pInst->scale, pInst->scale);
+		AEMtx33Scale(&scale, 50.0f, 50.0f);
 		// Compute the rotation matrix 
 		AEMtx33Rot(&rot, pInst->dirCurr);
 		// Compute the translation matrix
@@ -601,25 +590,7 @@ void Level1_Draw()
 		tilemap[i].Render(Map_Width,Map_Height);
 	}
 
-	AEGfxSetRenderMode(AE_GFX_RM_TEXTURE);
-	// Set position
-	AEGfxSetPosition(0.0f, 0.0f); //minus 20 y-axis for every platform position
-	// No tint
-	AEGfxSetTintColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// Floor texture
-	AEGfxTextureSet(man, 0, 0);
 
-	scale = { 0 };
-	AEMtx33Scale(&scale, 50.f, 50.f);
-	rotate = { 0 };
-	AEMtx33Rot(&rotate, PI * 2.f);
-	translate = { 0 };
-	AEMtx33Trans(&translate, spPlayer->posCurr.x, spPlayer->posCurr.y);
-	transform = { 0 };
-	AEMtx33Concat(&transform, &rotate, &scale);
-	AEMtx33Concat(&transform, &translate, &transform);
-	AEGfxSetTransform(transform.m);
-	AEGfxMeshDraw(Mesh::Rect, AE_GFX_MDM_TRIANGLES);
 
 
 
@@ -654,7 +625,7 @@ void Level1_Draw()
 	
 
 	/// <Draw light circle start>
-	static f32 elapsed = 0;
+	/*static f32 elapsed = 0;
 	elapsed += g_dt;
 	AEGfxSetTransparency(1.0f);
 	if (elapsed < 10.f)
@@ -707,7 +678,7 @@ void Level1_Draw()
 	AEGfxMeshDraw(pMeshRect, AE_GFX_MDM_TRIANGLES);
 	// Light circle mesh
 
-
+	
 
 
 
@@ -733,7 +704,7 @@ void Level1_Draw()
 	AEGfxMeshDraw(pMeshRect, AE_GFX_MDM_TRIANGLES);
 	/// <Draw Timer Bar end>
 
-
+	*/
 	/// <summary>
 	/// ///////////////////////////////////////////////////////////////////////////////////////////////////
 	/// </summary>
@@ -778,7 +749,6 @@ void Level1_Draw()
 	}
 	//////////////////////////////////////////////////////////////////////////////////////
 }
-
 void Level1_Free()
 {
 	// =========================

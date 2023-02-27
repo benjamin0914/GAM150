@@ -20,8 +20,11 @@ enum class EntitySizes {
 EntitySizes& operator++(EntitySizes& rhs);
 
 extern int** MapData;
+extern int** BinaryCollisionArray;
 extern int Map_Width;
 extern int Map_Height;
 
 int		ImportMapDataFromFile(const char* FileName);
 void	FreeMapData(void);
+int CheckInstanceBinaryMapCollision(float PosX, float PosY, float scaleX, float scaleY);
+void SnapToCell(float* Coordinate);

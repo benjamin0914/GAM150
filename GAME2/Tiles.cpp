@@ -54,7 +54,7 @@ void Tiles::Render(int width, int height) {
 	AEMtx33	trans, rot, scale;
 	AEMtx33Scale(&scale, width, height);
 	AEMtx33Rot(&rot, AEDegToRad(0));
-	AEMtx33Trans(&trans, -HalfWinWindow + spawnPos.x, HalfWinHeight - spawnPos.y);
+	AEMtx33Trans(&trans,  spawnPos.x, spawnPos.y);
 	AEMtx33 temp;
 	AEMtx33Concat(&temp, &rot, &scale);
 	AEMtx33Concat(&transformMtx, &trans, &temp);
@@ -70,6 +70,7 @@ void Tiles::Render(int width, int height) {
 	AEGfxMeshDraw(Mesh::Rect, AE_GFX_MDM_TRIANGLES);
 	
 }
+
 
 
 
