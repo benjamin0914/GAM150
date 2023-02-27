@@ -489,7 +489,60 @@ void Level1_Update()
 		}
 	}
 
+	//Check for grid collision
+	for (i = 0; i < GAME_OBJ_INST_NUM_MAX; ++i)
+	{
+		pInst = sGameObjInstList + i;
 
+		// skip non-active object instances
+		if (0 == (pInst->flag & FLAG_ACTIVE))
+			continue;
+
+		/*************
+		Update grid collision flag
+
+		if collision from bottom
+			Snap to cell on Y axis
+			Velocity Y = 0
+
+		if collision from top
+			Snap to cell on Y axis
+			Velocity Y = 0
+
+		if collision from left
+			Snap to cell on X axis
+			Velocity X = 0
+
+		if collision from right
+			Snap to cell on X axis
+			Velocity X = 0
+		*************/
+		pInst->gridCollisionFlag = CheckInstanceBinaryMapCollision(pInst->posCurr.x, pInst->posCurr.y, pInst->scale, pInst->scale);
+
+		if (COLLISION_BOTTOM & pInst->gridCollisionFlag)
+		{
+			SnapToCell(&pInst->posCurr.y);
+			pInst->velCurr.y = 0.f;
+		}
+
+		if (COLLISION_TOP & pInst->gridCollisionFlag)
+		{
+			SnapToCell(&pInst->posCurr.y);
+			pInst->velCurr.y = 0.f;
+		}
+
+		if (COLLISION_LEFT & pInst->gridCollisionFlag)
+		{
+			SnapToCell(&pInst->posCurr.x);
+			pInst->velCurr.x = 0.f;
+		}
+
+		if (COLLISION_RIGHT & pInst->gridCollisionFlag)
+		{
+			SnapToCell(&pInst->posCurr.x);
+			pInst->velCurr.x = 0.f;
+		}
+	}
 
 
 
