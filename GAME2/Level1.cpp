@@ -509,7 +509,7 @@ void Level1_Update()
 		{
 			std::cout << "collided left";
 			//std::cout << "TestLeft";
-			SnapToCell(&spPlayer->posCurr.x,2.5f);
+			SnapToCell(&spPlayer->posCurr.x,5.0f);
 			spPlayer->velCurr.x = 0.f;
 		}
 
@@ -517,7 +517,7 @@ void Level1_Update()
 		{
 			std::cout << "collided right";
 			//std::cout << "TestRight";
-			SnapToCell(&spPlayer->posCurr.x,-2.5f);
+			SnapToCell(&spPlayer->posCurr.x,-5.0f);
 			spPlayer->velCurr.x = 0.f;
 		}
 		if (COLLISION_BOTTOM & spPlayer->gridCollisionFlag)
@@ -531,7 +531,7 @@ void Level1_Update()
 		{
 			std::cout << "collided top";
 			//std::cout << "TestTop";
-			SnapToCell(&spPlayer->posCurr.y,-2.5f);
+			SnapToCell(&spPlayer->posCurr.y,-5.0f);
 			spPlayer->velCurr.y = 0.f;
 		}
 	
