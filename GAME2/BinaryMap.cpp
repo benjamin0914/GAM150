@@ -129,9 +129,9 @@ int CheckInstanceBinaryMapCollision(float PosX, float PosY, float scaleX, float 
 	int flag = 0;
 
 	// hotspot 1
-	float x1 =  (PosX - scaleX / 2)/100;	//To reach the left side
+	float x1 =  (PosX - 70/ 2)/100;	//To reach the left side
 	float y1 = (PosY + scaleY / 4)/70;	//To go up 1 / 4 of the height
-	float x2 =  (PosX - scaleX / 2)/100;	//To reach the left side
+	float x2 =  (PosX - 70 / 2)/100;	//To reach the left side
 	float y2 =  (PosY - scaleY / 4)/70;	//To go down 1 / 4 of the height
 	x1 = fabs(x1);
 	x2 = fabs(x2);
@@ -142,9 +142,9 @@ int CheckInstanceBinaryMapCollision(float PosX, float PosY, float scaleX, float 
 	}
 
 
-	x1 = (PosX + scaleX / 2)/100;	//To reach the right side
+	x1 = (PosX + 70 / 2)/100;	//To reach the right side
 	y1 = (PosY + scaleY / 4)/70;	//To go up 1 / 4 of the height
-	x2 = (PosX + scaleX / 2)/100;	//To reach the right side
+	x2 = (PosX + 70 / 2)/100;	//To reach the right side
 	y2 = (PosY - scaleY / 4)/70;	//To go down 1 / 4 of the height
 
 
@@ -165,9 +165,9 @@ int CheckInstanceBinaryMapCollision(float PosX, float PosY, float scaleX, float 
 	}
 
 	x1 = (PosX - scaleX / 4)/100;
-	y1 = (PosY - 15/ 2)/70;
+	y1 = (PosY - 5/ 2)/70;
 	x2 = (PosX + scaleX / 4)/100;
-	y2 = (PosY - 15 / 2)/70;
+	y2 = (PosY - 5 / 2)/70;
 	x1 = fabs(x1);
 	x2 = fabs(x2);
 	y1 = fabs(y1);
