@@ -559,7 +559,7 @@ void Level1_Update()
 			continue;
 
 		// Compute the scaling matrix
-		AEMtx33Scale(&scale, 50.0f, 50.0f);
+		AEMtx33Scale(&scale, 75.0f, 70.0f);
 		// Compute the rotation matrix 
 		AEMtx33Rot(&rot, pInst->dirCurr);
 		// Compute the translation matrix

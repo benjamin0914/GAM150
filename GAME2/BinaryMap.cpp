@@ -165,7 +165,7 @@ int CheckInstanceBinaryMapCollision(float PosX, float PosY, float scaleX, float 
 	}
 
 	x1 = (PosX - scaleX / 4)/100;
-	y1 = (PosY - 15 / 2)/70;
+	y1 = (PosY - 15/ 2)/70;
 	x2 = (PosX + scaleX / 4)/100;
 	y2 = (PosY - 15 / 2)/70;
 	x1 = fabs(x1);
